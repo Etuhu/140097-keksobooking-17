@@ -1,6 +1,7 @@
 'use strict';
 
 var TYPES_OF_HOUSING = ['palace', 'flat', 'house', 'bungalo'];
+var TIME = ['12:00', '13:00', '14:00'];
 var COORDINATE_Y_MIN = 130;
 var COORDINATE_Y_MAX = 630;
 
@@ -12,6 +13,10 @@ var mapFilters = document.querySelector('.map__filters');
 var mapFiltersFieldsets = mapFilters.querySelectorAll('fieldset');
 var mapFiltersSelects = mapFilters.querySelectorAll('select');
 var mapPinMain = document.querySelector('.map__pin--main');
+var housingTypeSelect = adForm.querySelector('#type');
+var housingPrice = adForm.querySelector('#price');
+var timeInSelect = adForm.querySelector('#timein');
+var timeOutSelect = adForm.querySelector('#timeout');
 
 var mapWidth = document.querySelector('.map').offsetWidth;
 var mapPinMainWidth = document.querySelector('.map__pin--main').offsetWidth;
@@ -112,3 +117,54 @@ var drawingMapPin = function () {
 };
 
 drawingMapPin();
+
+// Устанавливает зависимость стоимости предложения от типа жилья
+var setsDependenceOfPrice = function () {
+  if (housingTypeSelect.value === TYPES_OF_HOUSING[3]) {
+    housingPrice.min = 0;
+    housingPrice.placeholder = 0;
+  } else if (housingTypeSelect.value === TYPES_OF_HOUSING[1]) {
+    housingPrice.min = 1000;
+    housingPrice.placeholder = 1000;
+  } else if (housingTypeSelect.value === TYPES_OF_HOUSING[2]) {
+    housingPrice.min = 5000;
+    housingPrice.placeholder = 5000;
+  } else if (housingTypeSelect.value === TYPES_OF_HOUSING[0]) {
+    housingPrice.min = 10000;
+    housingPrice.placeholder = 10000;
+  }
+};
+
+// Устанавливает значение placeholder поля "Цена за ночь" при загрузке страницы
+// в соответствии с типом жилья
+setsDependenceOfPrice();
+
+housingTypeSelect.addEventListener('change', function () {
+  setsDependenceOfPrice();
+});
+
+// Устанавливает зависимость времени выезда от времени заезда
+var setsDependenceOfTimeIn = function () {
+  for (var i = 0; i < TIME.length; i++) {
+    if (timeInSelect.value === TIME[i]) {
+      timeOutSelect.value = timeInSelect.value;
+    }
+  }
+};
+
+timeInSelect.addEventListener('change', function () {
+  setsDependenceOfTimeIn();
+});
+
+// Устанавливает зависимость времени заезда от времени выезда
+var setsDependenceOfTimeOut = function () {
+  for (var i = 0; i < TIME.length; i++) {
+    if (timeOutSelect.value === TIME[i]) {
+      timeInSelect.value = timeOutSelect.value;
+    }
+  }
+};
+
+timeOutSelect.addEventListener('change', function () {
+  setsDependenceOfTimeOut();
+});
