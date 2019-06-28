@@ -4,19 +4,62 @@ var TYPES_OF_HOUSING = ['palace', 'flat', 'house', 'bungalo'];
 var COORDINATE_Y_MIN = 130;
 var COORDINATE_Y_MAX = 630;
 
+var map = document.querySelector('.map');
+var adForm = document.querySelector('.ad-form');
+var adFormFieldsets = adForm.querySelectorAll('fieldset');
+var addressInput = adForm.querySelector('#address');
+var mapFilters = document.querySelector('.map__filters');
+var mapFiltersFieldsets = mapFilters.querySelectorAll('fieldset');
+var mapFiltersSelects = mapFilters.querySelectorAll('select');
+var mapPinMain = document.querySelector('.map__pin--main');
+
 var mapWidth = document.querySelector('.map').offsetWidth;
-var mapPinWidth = document.querySelector('.map__pin').offsetWidth;
+var mapPinMainWidth = document.querySelector('.map__pin--main').offsetWidth;
 
 var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
 var mapPins = document.querySelector('.map__pins');
 var fragment = document.createDocumentFragment();
 
-document.querySelector('.map').classList.remove('map--faded');
+// Удаляет атрибут у нескольких элементов одного типа
+var removeDisabledAttr = function (arrayName, attributeName) {
+  for (var i = 0; i < arrayName.length; i++) {
+    arrayName[i].removeAttribute(attributeName);
+  }
+};
 
+// Извлекает числовое значение из строчного элемента и записывает его в поле ввода
+var extractNumber = function () {
+  addressInput.value = parseInt(mapPinMain.style.left, 10) + ', ' + parseInt(mapPinMain.style.top, 10);
+  var extractNumberValue = addressInput.value;
+  return extractNumberValue;
+};
+extractNumber();
+
+// Переводит главную страницу и ее элементы в активный режим
+var activateMainPage = function () {
+  map.classList.remove('map--faded');
+  adForm.classList.remove('ad-form--disabled');
+  removeDisabledAttr(adFormFieldsets, 'disabled');
+  removeDisabledAttr(mapFiltersFieldsets, 'disabled');
+  removeDisabledAttr(mapFiltersSelects, 'disabled');
+};
+
+mapPinMain.addEventListener('click', function () {
+  activateMainPage();
+});
+
+// Заполняет поле адреса в соответствии с положением метки на карте
+mapPinMain.addEventListener('mouseup', function () {
+  activateMainPage();
+  extractNumber();
+});
+
+// Функция-рандомизатор чисел и значений
 var getRandom = function (min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 };
 
+// Функция-генератор случайных чисел и значений
 var getUniqueNumber = function (max) {
   var sum = 0;
   for (var i = 1; i <= max; i++) {
@@ -25,6 +68,7 @@ var getUniqueNumber = function (max) {
   return sum;
 };
 
+// Генерирует уникальные метки на карте (предложения жилья)
 var createOfferings = function (count) {
   var offerings = [];
 
@@ -38,7 +82,7 @@ var createOfferings = function (count) {
       },
       location:
         {
-          x: getRandom(mapPinWidth, mapWidth - mapPinWidth),
+          x: getRandom(mapPinMainWidth, mapWidth - mapPinMainWidth),
           y: getRandom(COORDINATE_Y_MIN, COORDINATE_Y_MAX)
         }
     });
@@ -46,6 +90,7 @@ var createOfferings = function (count) {
   return offerings;
 };
 
+// Связывает код с элементами разметки
 var renderMapPin = function (offering) {
   var mapPinElement = pinTemplate.cloneNode(true);
 
@@ -57,6 +102,7 @@ var renderMapPin = function (offering) {
   return mapPinElement;
 };
 
+// Отрисовывает метки (предложения жилья) на карте
 var drawingMapPin = function () {
   var offersArray = createOfferings(8);
   for (var i = 0; i < offersArray.length; i++) {
