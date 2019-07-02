@@ -1,17 +1,37 @@
 'use strict';
 
-var TYPES_OF_HOUSING = ['palace', 'flat', 'house', 'bungalo'];
-var TIME = ['12:00', '13:00', '14:00'];
+var MAP_PIN_MAIN_WIDTH = document.querySelector('.map__pin--main').offsetWidth;
+var MAP_PIN_MAIN_HEIGHT = document.querySelector('.map__pin--main').offsetHeight;
+
 var COORDINATE_Y_MIN = 130;
 var COORDINATE_Y_MAX = 630;
+
+var HOUSING_SETTING = {
+  'palace': {
+    min: 10000,
+    placeholder: 10000
+  },
+  'flat': {
+    min: 1000,
+    placeholder: 1000
+  },
+  'house': {
+    min: 5000,
+    placeholder: 5000
+  },
+  'bungalo': {
+    min: 0,
+    placeholder: 0
+  }
+};
 
 var map = document.querySelector('.map');
 var adForm = document.querySelector('.ad-form');
 var adFormFieldsets = adForm.querySelectorAll('fieldset');
 var addressInput = adForm.querySelector('#address');
-var mapFilters = document.querySelector('.map__filters');
-var mapFiltersFieldsets = mapFilters.querySelectorAll('fieldset');
-var mapFiltersSelects = mapFilters.querySelectorAll('select');
+var mapFilter = document.querySelector('.map__filters');
+var mapFilterFieldsets = mapFilter.querySelectorAll('fieldset');
+var mapFilterSelects = mapFilter.querySelectorAll('select');
 var mapPinMain = document.querySelector('.map__pin--main');
 var housingTypeSelect = adForm.querySelector('#type');
 var housingPrice = adForm.querySelector('#price');
@@ -19,44 +39,86 @@ var timeInSelect = adForm.querySelector('#timein');
 var timeOutSelect = adForm.querySelector('#timeout');
 
 var mapWidth = document.querySelector('.map').offsetWidth;
-var mapPinMainWidth = document.querySelector('.map__pin--main').offsetWidth;
 
 var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
 var mapPins = document.querySelector('.map__pins');
 var fragment = document.createDocumentFragment();
 
 // Удаляет атрибут у нескольких элементов одного типа
-var removeDisabledAttr = function (arrayName, attributeName) {
+var removeAttrFromFields = function (arrayName, attributeName) {
   for (var i = 0; i < arrayName.length; i++) {
     arrayName[i].removeAttribute(attributeName);
   }
 };
 
-// Извлекает числовое значение из строчного элемента и записывает его в поле ввода
-var extractNumber = function () {
-  addressInput.value = parseInt(mapPinMain.style.left, 10) + ', ' + parseInt(mapPinMain.style.top, 10);
+// Извлекает числовое значение из строчного элемента и записывает его в поле ввода адреса
+// (с поправкой на то, что в адрес записываются координаты острого конца)
+var extractNumber = function (left, top, widthCorrect, heightCorrect) {
+  addressInput.value = (parseInt(left, 10) + widthCorrect) + ', ' + (parseInt(top, 10) + heightCorrect);
   var extractNumberValue = addressInput.value;
   return extractNumberValue;
 };
-extractNumber();
+
+// Записывает в поле ввода координаты главной метки до момента активации (красный круг)
+extractNumber(mapPinMain.style.left, mapPinMain.style.top, 0, 0);
 
 // Переводит главную страницу и ее элементы в активный режим
 var activateMainPage = function () {
   map.classList.remove('map--faded');
   adForm.classList.remove('ad-form--disabled');
-  removeDisabledAttr(adFormFieldsets, 'disabled');
-  removeDisabledAttr(mapFiltersFieldsets, 'disabled');
-  removeDisabledAttr(mapFiltersSelects, 'disabled');
+  removeAttrFromFields(adFormFieldsets, 'disabled');
+  removeAttrFromFields(mapFilterFieldsets, 'disabled');
+  removeAttrFromFields(mapFilterSelects, 'disabled');
 };
 
-mapPinMain.addEventListener('click', function () {
-  activateMainPage();
-});
+// Добавляет возможность перемещения метки по карте
+mapPinMain.addEventListener('mousedown', function (evt) {
+  evt.preventDefault();
 
-// Заполняет поле адреса в соответствии с положением метки на карте
-mapPinMain.addEventListener('mouseup', function () {
-  activateMainPage();
-  extractNumber();
+  var startCoords = {
+    x: evt.clientX,
+    y: evt.clientY
+  };
+
+  // Задает расчёт координат маркера и их запись в поле адреса
+  var calculateCoordMainPin = function (evtName) {
+    var shift = {
+      x: startCoords.x - evtName.clientX,
+      y: startCoords.y - evtName.clientY
+    };
+
+    startCoords = {
+      x: evtName.clientX,
+      y: evtName.clientY
+    };
+
+    mapPinMain.style.top = (mapPinMain.offsetTop - shift.y) + 'px';
+    mapPinMain.style.left = (mapPinMain.offsetLeft - shift.x) + 'px';
+  };
+
+  // if (evtName.clientY > 300) {
+  //   evtName.clientY = 300;
+  // }
+
+  var onMouseMove = function (moveEvt) {
+    moveEvt.preventDefault();
+    activateMainPage();
+    calculateCoordMainPin(moveEvt);
+  };
+
+  var onMouseUp = function (upEvt) {
+    upEvt.preventDefault();
+    calculateCoordMainPin(upEvt);
+
+    // Заполняет поле адреса в соответствии с положением метки на карте
+    extractNumber(mapPinMain.style.left, mapPinMain.style.top, MAP_PIN_MAIN_WIDTH / 2, MAP_PIN_MAIN_HEIGHT);
+
+    document.removeEventListener('mousemove', onMouseMove);
+    document.removeEventListener('mouseup', onMouseUp);
+  };
+
+  document.addEventListener('mousemove', onMouseMove);
+  document.addEventListener('mouseup', onMouseUp);
 });
 
 // Функция-рандомизатор чисел и значений
@@ -76,18 +138,18 @@ var getUniqueNumber = function (max) {
 // Генерирует уникальные метки на карте (предложения жилья)
 var createOfferings = function (count) {
   var offerings = [];
-
+  var housingTypes = Object.keys(HOUSING_SETTING);
   for (var i = 0; i < count; i++) {
     offerings.push({
       author: {
         avatar: 'img/avatars/user0' + getUniqueNumber(i + 1) + '.png'
       },
       offer: {
-        type: TYPES_OF_HOUSING[getRandom(0, TYPES_OF_HOUSING.length - 1)]
+        type: housingTypes[getRandom(0, housingTypes.length - 1)]
       },
       location:
         {
-          x: getRandom(mapPinMainWidth, mapWidth - mapPinMainWidth),
+          x: getRandom(MAP_PIN_MAIN_WIDTH, mapWidth - MAP_PIN_MAIN_WIDTH),
           y: getRandom(COORDINATE_Y_MIN, COORDINATE_Y_MAX)
         }
     });
@@ -120,18 +182,11 @@ drawingMapPin();
 
 // Устанавливает зависимость стоимости предложения от типа жилья
 var setsDependenceOfPrice = function () {
-  if (housingTypeSelect.value === TYPES_OF_HOUSING[3]) {
-    housingPrice.min = 0;
-    housingPrice.placeholder = 0;
-  } else if (housingTypeSelect.value === TYPES_OF_HOUSING[1]) {
-    housingPrice.min = 1000;
-    housingPrice.placeholder = 1000;
-  } else if (housingTypeSelect.value === TYPES_OF_HOUSING[2]) {
-    housingPrice.min = 5000;
-    housingPrice.placeholder = 5000;
-  } else if (housingTypeSelect.value === TYPES_OF_HOUSING[0]) {
-    housingPrice.min = 10000;
-    housingPrice.placeholder = 10000;
+  var selectedValue = housingTypeSelect.value;
+  var selectedHouseSettings = HOUSING_SETTING[selectedValue];
+  for (var key in selectedHouseSettings) {
+    var value = selectedHouseSettings[key]
+    housingPrice.setAttribute(key, value)
   }
 };
 
@@ -143,28 +198,17 @@ housingTypeSelect.addEventListener('change', function () {
   setsDependenceOfPrice();
 });
 
-// Устанавливает зависимость времени выезда от времени заезда
-var setsDependenceOfTimeIn = function () {
-  for (var i = 0; i < TIME.length; i++) {
-    if (timeInSelect.value === TIME[i]) {
-      timeOutSelect.value = timeInSelect.value;
-    }
+// Устанавливает зависимость между временем заезда и выезда
+var setDependentValue = function (fieldFrom, fieldTo) {
+  if (fieldFrom.value !== fieldTo.value) {
+    fieldTo.value = fieldFrom.value;
   }
 };
 
 timeInSelect.addEventListener('change', function () {
-  setsDependenceOfTimeIn();
+  setDependentValue(timeInSelect, timeOutSelect);
 });
 
-// Устанавливает зависимость времени заезда от времени выезда
-var setsDependenceOfTimeOut = function () {
-  for (var i = 0; i < TIME.length; i++) {
-    if (timeOutSelect.value === TIME[i]) {
-      timeInSelect.value = timeOutSelect.value;
-    }
-  }
-};
-
 timeOutSelect.addEventListener('change', function () {
-  setsDependenceOfTimeOut();
+  setDependentValue(timeOutSelect, timeInSelect);
 });
