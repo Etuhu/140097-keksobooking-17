@@ -6,6 +6,8 @@ var MAP_PIN_MAIN_HEIGHT = document.querySelector('.map__pin--main').offsetHeight
 var COORDINATE_Y_MIN = 130;
 var COORDINATE_Y_MAX = 630;
 
+var TYPES_OF_HOUSING = ['palace', 'flat', 'house', 'bungalo'];
+
 var HOUSING_SETTING = {
   'palace': {
     min: 10000,
@@ -92,13 +94,22 @@ mapPinMain.addEventListener('mousedown', function (evt) {
       y: evtName.clientY
     };
 
-    mapPinMain.style.top = (mapPinMain.offsetTop - shift.y) + 'px';
-    mapPinMain.style.left = (mapPinMain.offsetLeft - shift.x) + 'px';
-  };
+    var finishCoordX = mapPinMain.offsetLeft - shift.x;
+    var finishCoordY = mapPinMain.offsetTop - shift.y;
 
-  // if (evtName.clientY > 300) {
-  //   evtName.clientY = 300;
-  // }
+    // Устанавливает предельные границы размещения маркера
+    var giveFinishCoord = function (finishCoord, minLimit, maxLimit) {
+      if (finishCoord <= minLimit) {
+        finishCoord = minLimit;
+      } else if (finishCoord >= maxLimit) {
+        finishCoord = maxLimit;
+      }
+      return finishCoord;
+    };
+
+    mapPinMain.style.top = giveFinishCoord(finishCoordY, COORDINATE_Y_MIN, COORDINATE_Y_MAX) + 'px';
+    mapPinMain.style.left = giveFinishCoord(finishCoordX, 0, mapWidth - MAP_PIN_MAIN_WIDTH) + 'px';
+  };
 
   var onMouseMove = function (moveEvt) {
     moveEvt.preventDefault();
@@ -182,12 +193,26 @@ drawingMapPin();
 
 // Устанавливает зависимость стоимости предложения от типа жилья
 var setsDependenceOfPrice = function () {
-  var selectedValue = housingTypeSelect.value;
-  var selectedHouseSettings = HOUSING_SETTING[selectedValue];
-  for (var key in selectedHouseSettings) {
-    var value = selectedHouseSettings[key]
-    housingPrice.setAttribute(key, value)
+  if (housingTypeSelect.value === TYPES_OF_HOUSING[3]) {
+    housingPrice.min = 0;
+    housingPrice.placeholder = 0;
+  } else if (housingTypeSelect.value === TYPES_OF_HOUSING[1]) {
+    housingPrice.min = 1000;
+    housingPrice.placeholder = 1000;
+  } else if (housingTypeSelect.value === TYPES_OF_HOUSING[2]) {
+    housingPrice.min = 5000;
+    housingPrice.placeholder = 5000;
+  } else if (housingTypeSelect.value === TYPES_OF_HOUSING[0]) {
+    housingPrice.min = 10000;
+    housingPrice.placeholder = 10000;
   }
+
+  // var selectedValue = housingTypeSelect.value;
+  // var selectedHouseSettings = HOUSING_SETTING[selectedValue];
+  //
+  // for (var key in selectedHouseSettings) {
+  //   var value = selectedHouseSettings[key];
+  //   housingPrice.setAttribute(key, value)
 };
 
 // Устанавливает значение placeholder поля "Цена за ночь" при загрузке страницы
