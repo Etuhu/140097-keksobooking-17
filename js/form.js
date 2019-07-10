@@ -1,29 +1,15 @@
 'use strict';
 
 (function () {
-  var housingTypeSelect = window.map.adForm.querySelector('#type');
-  var housingPrice = window.map.adForm.querySelector('#price');
-  var timeInSelect = window.map.adForm.querySelector('#timein');
-  var timeOutSelect = window.map.adForm.querySelector('#timeout');
-
-  // Устанавливает зависимость стоимости предложения от типа жилья
-  var setsDependenceOfPrice = function () {
-    var selectedValue = housingTypeSelect.value;
-    var selectedHouseSettings = window.map.HOUSING_SETTING[selectedValue];
-    for (var key in selectedHouseSettings) {
-      if (selectedHouseSettings.hasOwnProperty(key)) {
-        var value = selectedHouseSettings[key];
-        housingPrice.setAttribute(key, value);
-      }
-    }
-  };
+  var timeInSelect = window.util.adForm.querySelector('#timein');
+  var timeOutSelect = window.util.adForm.querySelector('#timeout');
 
   // Устанавливает значение placeholder поля "Цена за ночь" при загрузке страницы
   // в соответствии с типом жилья
-  setsDependenceOfPrice();
+  window.util.setsDependenceOfPrice();
 
-  housingTypeSelect.addEventListener('change', function () {
-    setsDependenceOfPrice();
+  window.util.housingTypeSelect.addEventListener('change', function () {
+    window.util.setsDependenceOfPrice();
   });
 
   // Устанавливает зависимость между временем заезда и выезда
