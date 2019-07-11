@@ -1,12 +1,16 @@
 'use strict';
 
 (function () {
+  var mainPage = document.querySelector('main');
+  // var error = document.querySelector('.error');
+  // var errorButton = document.querySelector('.error__button');
   var map = document.querySelector('.map');
   var adFormFieldsets = window.util.adForm.querySelectorAll('fieldset');
   var mapFilter = document.querySelector('.map__filters');
   var mapFilterFieldsets = mapFilter.querySelectorAll('fieldset');
   var mapFilterSelects = mapFilter.querySelectorAll('select');
   var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
+  var errorTemplate = document.querySelector('#error').content.querySelector('.error');
   var mapPins = document.querySelector('.map__pins');
   var fragment = document.createDocumentFragment();
 
@@ -19,12 +23,11 @@
       window.util.removeAttrFromFields(adFormFieldsets, 'disabled');
       window.util.removeAttrFromFields(mapFilterFieldsets, 'disabled');
       window.util.removeAttrFromFields(mapFilterSelects, 'disabled');
-      drawingMapPin();
+      window.backend.load(drawingMapPin, drawingErrorMessage);
     }
   };
-  window.activateMainPage = activateMainPage;
 
-  // Связывает код с элементами разметки
+  // Передает параметры отрисовки пинов соответствующим элементам в разметке
   var renderMapPin = function (offering) {
     var mapPinElement = pinTemplate.cloneNode(true);
 
@@ -36,12 +39,31 @@
     return mapPinElement;
   };
 
-  // Отрисовывает метки (предложения жилья) на карте
-  var drawingMapPin = function () {
-    var offersArray = window.data.createOfferings(8);
+  var drawingMapPin = function (offersArray) {
     for (var i = 0; i < offersArray.length; i++) {
       fragment.appendChild(renderMapPin(offersArray[i]));
     }
     mapPins.appendChild(fragment);
   };
+
+  // Отрисовывает сообщение об ошибке загрузки данных с сервера
+  var errorHandler = function () {
+    var errorMessage = errorTemplate.cloneNode(true);
+    return errorMessage;
+  };
+
+  var drawingErrorMessage = function () {
+    fragment.appendChild(errorHandler());
+    mainPage.appendChild(fragment);
+  };
+
+  // var deleteErrorMessage = function () {
+  //   mainPage.removeChild('.error');
+  // };
+  //
+  // errorButton.addEventListener('click', function () {
+  //   deleteErrorMessage();
+  // });
+
+  window.activateMainPage = activateMainPage;
 })();
