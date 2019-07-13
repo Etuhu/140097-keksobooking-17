@@ -5,7 +5,7 @@
   // var error = document.querySelector('.error');
   // var errorButton = document.querySelector('.error__button');
   var map = document.querySelector('.map');
-  var adFormFieldsets = window.util.adForm.querySelectorAll('fieldset');
+  var adFormFieldsets = window.form.adForm.querySelectorAll('fieldset');
   var mapFilter = document.querySelector('.map__filters');
   var mapFilterFieldsets = mapFilter.querySelectorAll('fieldset');
   var mapFilterSelects = mapFilter.querySelectorAll('select');
@@ -19,7 +19,7 @@
     var isMapDisabled = map.classList.contains('map--faded');
     if (isMapDisabled) {
       map.classList.remove('map--faded');
-      window.util.adForm.classList.remove('ad-form--disabled');
+      window.form.adForm.classList.remove('ad-form--disabled');
       window.util.removeAttrFromFields(adFormFieldsets, 'disabled');
       window.util.removeAttrFromFields(mapFilterFieldsets, 'disabled');
       window.util.removeAttrFromFields(mapFilterSelects, 'disabled');
@@ -48,13 +48,14 @@
 
   // Отрисовывает сообщение об ошибке загрузки данных с сервера
   var errorHandler = function () {
-    var errorMessage = errorTemplate.cloneNode(true);
-    return errorMessage;
+    var errorBlock = errorTemplate.cloneNode(true);
+    return errorBlock;
   };
 
-  var drawingErrorMessage = function () {
+  var drawingErrorMessage = function (errorMessage) {
     fragment.appendChild(errorHandler());
     mainPage.appendChild(fragment);
+    document.querySelector('.error__message').textContent = errorMessage;
   };
 
   // var deleteErrorMessage = function () {

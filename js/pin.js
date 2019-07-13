@@ -4,7 +4,7 @@
   var mapPinMain = document.querySelector('.map__pin--main');
   var mapPinMainWidth = mapPinMain.offsetWidth;
   var mapPinMainHeight = mapPinMain.offsetHeight;
-  var addressInput = window.util.adForm.querySelector('#address');
+  var addressInput = window.form.adForm.querySelector('#address');
 
   // Извлекает числовое значение из строчного элемента и записывает его в поле ввода адреса
   // (с поправкой на то, что в адрес записываются координаты острого конца)

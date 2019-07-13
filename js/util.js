@@ -22,9 +22,7 @@
       placeholder: 0
     }
   };
-  var adForm = document.querySelector('.ad-form');
   var mapWidth = document.querySelector('.map').offsetWidth;
-  var housingTypeSelect = adForm.querySelector('#type');
 
   // Удаляет атрибут у нескольких элементов одного типа
   var removeAttrFromFields = function (arrayName, attributeName) {
@@ -47,16 +45,10 @@
     return sum;
   };
 
-  // Устанавливает зависимость стоимости предложения от типа жилья
-  var setsDependenceOfPrice = function () {
-    var selectedValue = housingTypeSelect.value;
-    var selectedHouseSettings = HOUSING_SETTING[selectedValue];
-    var housingPrice = adForm.querySelector('#price');
-    for (var key in selectedHouseSettings) {
-      if (selectedHouseSettings.hasOwnProperty(key)) {
-        var value = selectedHouseSettings[key];
-        housingPrice.setAttribute(key, value);
-      }
+  // Устанавливает зависимость между временем заезда и выезда
+  var setDependentValue = function (fieldFrom, fieldTo) {
+    if (fieldFrom.value !== fieldTo.value) {
+      fieldTo.value = fieldFrom.value;
     }
   };
 
@@ -69,11 +61,9 @@
 
   window.util = {
     HOUSING_SETTING: HOUSING_SETTING,
-    housingTypeSelect: housingTypeSelect,
-    adForm: adForm,
     getRandom: getRandom,
     getGrowingNumber: getGrowingNumber,
-    setsDependenceOfPrice: setsDependenceOfPrice,
-    removeAttrFromFields: removeAttrFromFields
+    removeAttrFromFields: removeAttrFromFields,
+    setDependentValue: setDependentValue
   };
 })();
