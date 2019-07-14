@@ -1,15 +1,20 @@
 'use strict';
 
 (function () {
-  var housingTypeSelect = window.map.adForm.querySelector('#type');
-  var housingPrice = window.map.adForm.querySelector('#price');
-  var timeInSelect = window.map.adForm.querySelector('#timein');
-  var timeOutSelect = window.map.adForm.querySelector('#timeout');
+  var adForm = document.querySelector('.ad-form');
+  var housingTypeSelect = adForm.querySelector('#type');
+  var timeInSelect = adForm.querySelector('#timein');
+  var timeOutSelect = adForm.querySelector('#timeout');
+
+  window.form = {
+    adForm: adForm
+  };
 
   // Устанавливает зависимость стоимости предложения от типа жилья
   var setsDependenceOfPrice = function () {
     var selectedValue = housingTypeSelect.value;
-    var selectedHouseSettings = window.map.HOUSING_SETTING[selectedValue];
+    var selectedHouseSettings = window.util.HOUSING_SETTING[selectedValue];
+    var housingPrice = adForm.querySelector('#price');
     for (var key in selectedHouseSettings) {
       if (selectedHouseSettings.hasOwnProperty(key)) {
         var value = selectedHouseSettings[key];
@@ -26,18 +31,13 @@
     setsDependenceOfPrice();
   });
 
-  // Устанавливает зависимость между временем заезда и выезда
-  var setDependentValue = function (fieldFrom, fieldTo) {
-    if (fieldFrom.value !== fieldTo.value) {
-      fieldTo.value = fieldFrom.value;
-    }
-  };
-
+  // Устанавливает зависимость значений полей "Время заезда и выезда" между собой
   timeInSelect.addEventListener('change', function () {
-    setDependentValue(timeInSelect, timeOutSelect);
+    window.util.setDependentValue(timeInSelect, timeOutSelect);
   });
 
   timeOutSelect.addEventListener('change', function () {
-    setDependentValue(timeOutSelect, timeInSelect);
+    window.util.setDependentValue(timeOutSelect, timeInSelect);
   });
+
 })();

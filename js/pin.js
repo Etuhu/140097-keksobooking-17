@@ -1,8 +1,10 @@
 'use strict';
 
 (function () {
-  var addressInput = window.map.adForm.querySelector('#address');
   var mapPinMain = document.querySelector('.map__pin--main');
+  var mapPinMainWidth = mapPinMain.offsetWidth;
+  var mapPinMainHeight = mapPinMain.offsetHeight;
+  var addressInput = window.form.adForm.querySelector('#address');
 
   // Извлекает числовое значение из строчного элемента и записывает его в поле ввода адреса
   // (с поправкой на то, что в адрес записываются координаты острого конца)
@@ -49,13 +51,13 @@
         return finishCoord;
       };
 
-      mapPinMain.style.top = giveFinishCoord(finishCoordY, window.map.COORDINATE_Y_MIN, window.map.COORDINATE_Y_MAX) + 'px';
-      mapPinMain.style.left = giveFinishCoord(finishCoordX, 0, window.map.mapWidth - window.map.MAP_PIN_MAIN_WIDTH) + 'px';
+      mapPinMain.style.top = giveFinishCoord(finishCoordY, window.mapSettings.COORDINATE_Y_MIN, window.mapSettings.COORDINATE_Y_MAX) + 'px';
+      mapPinMain.style.left = giveFinishCoord(finishCoordX, 0, window.mapSettings.mapWidth - mapPinMainWidth) + 'px';
     };
 
     var onMouseMove = function (moveEvt) {
       moveEvt.preventDefault();
-      window.map.activateMainPage();
+      window.activateMainPage();
       calculateCoordMainPin(moveEvt);
     };
 
@@ -64,7 +66,7 @@
       calculateCoordMainPin(upEvt);
 
       // Заполняет поле адреса в соответствии с положением метки на карте
-      extractNumber(mapPinMain.style.left, mapPinMain.style.top, window.map.MAP_PIN_MAIN_WIDTH / 2, window.map.MAP_PIN_MAIN_HEIGHT);
+      extractNumber(mapPinMain.style.left, mapPinMain.style.top, mapPinMainWidth / 2, mapPinMainHeight);
 
       document.removeEventListener('mousemove', onMouseMove);
       document.removeEventListener('mouseup', onMouseUp);
