@@ -2,8 +2,6 @@
 
 (function () {
   var mainPage = document.querySelector('main');
-  // var error = document.querySelector('.error');
-  // var errorButton = document.querySelector('.error__button');
   var map = document.querySelector('.map');
   var adFormFieldsets = window.form.adForm.querySelectorAll('fieldset');
   var mapFilter = document.querySelector('.map__filters');
@@ -57,14 +55,6 @@
     mainPage.appendChild(fragment);
     document.querySelector('.error__message').textContent = errorMessage;
   };
-
-  // var deleteErrorMessage = function () {
-  //   mainPage.removeChild('.error');
-  // };
-  //
-  // errorButton.addEventListener('click', function () {
-  //   deleteErrorMessage();
-  // });
 
   window.activateMainPage = activateMainPage;
 })();

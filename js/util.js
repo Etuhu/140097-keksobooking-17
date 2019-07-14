@@ -1,6 +1,7 @@
 'use strict';
 
 (function () {
+  var ESC_KEYCODE = 27;
   var COORDINATE_Y_MIN = 130;
   var COORDINATE_Y_MAX = 630;
   var PIN_WIDTH = 50;
@@ -60,6 +61,7 @@
   };
 
   window.util = {
+    ESC_KEYCODE: ESC_KEYCODE,
     HOUSING_SETTING: HOUSING_SETTING,
     getRandom: getRandom,
     getGrowingNumber: getGrowingNumber,
