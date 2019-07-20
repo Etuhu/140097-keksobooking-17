@@ -33,8 +33,6 @@
       return offering.offer.type === housingTypeFilter.value;
     });
     renderMapPin(sameOfferType);
-    console.log(sameOfferType);
-    console.log(housingTypeFilter.value);
   };
 
   // Передает параметры отрисовки пинов соответствующим элементам в разметке
