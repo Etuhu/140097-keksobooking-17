@@ -11,6 +11,7 @@
   var errorTemplate = document.querySelector('#error').content.querySelector('.error');
   var mapPins = document.querySelector('.map__pins');
   var fragment = document.createDocumentFragment();
+  var housingTypeFilter = document.querySelector('#housing-type');
 
   // Переводит главную страницу и ее элементы в активный режим
   var activateMainPage = function () {
@@ -25,6 +26,17 @@
     }
   };
 
+  var offerings = [];
+
+  var updateOffers = function () {
+    var sameOfferType = offerings.filter(function (offering) {
+      return offering.offer.type === housingTypeFilter.value;
+    });
+    renderMapPin(sameOfferType);
+    console.log(sameOfferType);
+    console.log(housingTypeFilter.value);
+  };
+
   // Передает параметры отрисовки пинов соответствующим элементам в разметке
   var renderMapPin = function (offering) {
     var mapPinElement = pinTemplate.cloneNode(true);
@@ -37,12 +49,21 @@
     return mapPinElement;
   };
 
-  var drawingMapPin = function (offersArray) {
-    for (var i = 0; i < offersArray.length; i++) {
-      fragment.appendChild(renderMapPin(offersArray[i]));
+  var drawingMapPin = function (data) {
+    offerings = data;
+
+
+    for (var i = 0; i < data.length; i++) {
+      fragment.appendChild(renderMapPin(data[i]));
     }
     mapPins.appendChild(fragment);
+    updateOffers();
   };
+
+  housingTypeFilter.addEventListener('change', function () {
+    updateOffers();
+  });
+
 
   // Отрисовывает сообщение об ошибке загрузки данных с сервера
   var errorHandler = function () {
