@@ -15,7 +15,7 @@
   var fragment = document.createDocumentFragment();
   var housingTypeFilter = document.querySelector('#housing-type');
 
-  // Осуществляет фильтрацию массива объявлений в зависимости от значения соответствующего select
+  // Осуществляет фильтрацию массива объявлений в зависимости от выбарнного типа жилья
   var getFilteredOffers = function () {
     var filterValue = housingTypeFilter.value;
     var resultArray =
@@ -55,6 +55,7 @@
     return mapPinElement;
   };
 
+  // Отрисовывает пины на странице
   var drawPins = function () {
     var filteredOffers = getFilteredOffers();
     filteredOffers.map(function (offer) {
@@ -63,10 +64,14 @@
     mapPins.appendChild(fragment);
   };
 
+  // Отображает на страницы пины, в соответствии со значением фильтра по типу жилья
   housingTypeFilter.addEventListener('change', function () {
+    var currentPinsArray = mapPins.querySelectorAll('.map__pin:not(.map__pin--main)');
+    for (var i = 0; i < currentPinsArray.length; i++) {
+      mapPins.removeChild(currentPinsArray[i]);
+    }
     drawPins();
   });
-
 
   // Отрисовывает сообщение об ошибке загрузки данных с сервера
   var errorHandler = function () {
