@@ -11,7 +11,7 @@
       errorModal.remove();
     });
 
-    document.addEventListener('click', function (evt) {
+    document.addEventListener('mousedown', function (evt) {
       evt.preventDefault();
       errorModal.remove();
     });
@@ -27,7 +27,12 @@
 
   // Загружает информацию о размещенных на карте объявлениях с сервера
   var load = function (onLoad, onError) {
-    var loadAddress = 'https://js.dump.academy/keksobooking/dat';
+    var loadAddress = 'https://js.dump.academy/keksobooking/data';
+
+    var handleError = function (message) {
+      onError(message);
+      deleteErrorModal();
+    };
 
     var xhr = new XMLHttpRequest();
     xhr.responseType = 'json';
@@ -36,17 +41,14 @@
       if (xhr.status === 200) {
         onLoad(xhr.response);
       } else {
-        onError('Ошибка загрузки объявления. Статус ответа сервера: ' + xhr.status + ' ' + xhr.statusText);
-        deleteErrorModal();
+        handleError('Ошибка загрузки объявления. Статус ответа сервера: ' + xhr.status + ' ' + xhr.statusText);
       }
     });
     xhr.addEventListener('error', function () {
-      onError('Произошла ошибка соединения');
-      deleteErrorModal();
+      handleError('Произошла ошибка соединения');
     });
     xhr.addEventListener('timeout', function () {
-      onError('Запрос не успел выполниться за ' + xhr.timeout + 'мс');
-      deleteErrorModal();
+      handleError('Запрос не успел выполниться за ' + xhr.timeout + 'мс');
     });
 
     xhr.timeout = 10000; // 10s
