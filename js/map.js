@@ -1,6 +1,8 @@
 'use strict';
 
 (function () {
+  var MAX_PIN_COUNT = 5;
+  var offers = [];
   var mainPage = document.querySelector('main');
   var map = document.querySelector('.map');
   var adFormFieldsets = window.form.adForm.querySelectorAll('fieldset');
@@ -13,6 +15,18 @@
   var fragment = document.createDocumentFragment();
   var housingTypeFilter = document.querySelector('#housing-type');
 
+  // Осуществляет фильтрацию массива объявлений в зависимости от значения соответствующего select
+  var getFilteredOffers = function () {
+    var filterValue = housingTypeFilter.value;
+    var resultArray =
+      filterValue === 'any' ?
+        offers :
+        offers.filter(function (offering) {
+          return offering.offer.type === housingTypeFilter.value;
+        });
+    return resultArray.slice(0, MAX_PIN_COUNT);
+  };
+
   // Переводит главную страницу и ее элементы в активный режим
   var activateMainPage = function () {
     var isMapDisabled = map.classList.contains('map--faded');
@@ -22,21 +36,15 @@
       window.util.removeAttrFromFields(adFormFieldsets, 'disabled');
       window.util.removeAttrFromFields(mapFilterFieldsets, 'disabled');
       window.util.removeAttrFromFields(mapFilterSelects, 'disabled');
-      window.backend.load(drawingMapPin, drawingErrorMessage);
+      window.backend.load(function (data) {
+        offers = data;
+        drawPins();
+      }, drawingErrorMessage);
     }
   };
 
-  var offerings = [];
-
-  var updateOffers = function () {
-    var sameOfferType = offerings.filter(function (offering) {
-      return offering.offer.type === housingTypeFilter.value;
-    });
-    renderMapPin(sameOfferType);
-  };
-
-  // Передает параметры отрисовки пинов соответствующим элементам в разметке
-  var renderMapPin = function (offering) {
+  // Передает параметры отрисовки пина соответствующим элементам в разметке
+  var createMapPin = function (offering) {
     var mapPinElement = pinTemplate.cloneNode(true);
 
     mapPinElement.style.left = offering.location.x + 'px';
@@ -47,19 +55,16 @@
     return mapPinElement;
   };
 
-  var drawingMapPin = function (data) {
-    offerings = data;
-
-
-    for (var i = 0; i < data.length; i++) {
-      fragment.appendChild(renderMapPin(data[i]));
-    }
+  var drawPins = function () {
+    var filteredOffers = getFilteredOffers();
+    filteredOffers.map(function (offer) {
+      fragment.appendChild(createMapPin(offer));
+    });
     mapPins.appendChild(fragment);
-    updateOffers();
   };
 
   housingTypeFilter.addEventListener('change', function () {
-    updateOffers();
+    drawPins();
   });
 
 
