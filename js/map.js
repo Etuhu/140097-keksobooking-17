@@ -6,10 +6,15 @@
   var mainPage = document.querySelector('main');
   var map = document.querySelector('.map');
   var adFormFieldsets = window.form.adForm.querySelectorAll('fieldset');
+  var mapFiltersContainer = document.querySelector('.map__filters-container');
   var mapFilter = document.querySelector('.map__filters');
   var mapFilterFieldsets = mapFilter.querySelectorAll('fieldset');
   var mapFilterSelects = mapFilter.querySelectorAll('select');
   var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
+  var cardTemplate = document.querySelector('#card').content.querySelector('.map__card');
+  // var cardTemplateFeatures = cardTemplate.content.querySelector('.popup__features');
+
+
   var errorTemplate = document.querySelector('#error').content.querySelector('.error');
   var mapPins = document.querySelector('.map__pins');
   var fragment = document.createDocumentFragment();
@@ -39,6 +44,7 @@
       window.backend.load(function (data) {
         offers = data;
         drawPins();
+        drawCards();
       }, drawingErrorMessage);
     }
   };
@@ -63,6 +69,49 @@
     });
     mapPins.appendChild(fragment);
   };
+
+///////////////////////////////КАРТОЧКИ
+
+  var offerTypeValue = {
+    'flat': 'Квартира',
+    'bungalo': 'Бунгало',
+    'house': 'Дом',
+    'palace': 'Дворец'
+  };
+
+  // Передает параметры отрисовки пина соответствующим элементам в разметке
+  var createCard = function (offering) {
+    var cardElement = cardTemplate.cloneNode(true);
+    // var cardTemplateFeatureElement = cardTemplateFeatures.cloneNode(true);
+
+    cardElement.querySelector('.popup__title').textContent = offering.offer.title;
+    cardElement.querySelector('.popup__text--address').textContent = offering.offer.address;
+    cardElement.querySelector('.popup__text--price').textContent = offering.offer.price + '₽/ночь';
+    cardElement.querySelector('.popup__type').textContent = offerTypeValue[offering.offer.type];
+    cardElement.querySelector('.popup__text--capacity').textContent = offering.offer.rooms + ' комнаты' + ' для ' + offering.offer.guests + ' гостей';
+    cardElement.querySelector('.popup__text--time').textContent = 'Заезд после ' + offering.offer.checkin + ', ' + 'выезд до ' + offering.offer.checkout;
+    // cardElement.querySelector('.popup__features').textContent = offering.offer.features;
+
+    cardElement.querySelector('.popup__features').querySelector('.popup__feature--wifi').innerHTML = '<li class="popup__feature popup__feature--wifi"></li>';
+
+    cardElement.querySelector('.popup__description').textContent = offering.offer.description;
+    cardElement.querySelector('.popup__photos').querySelector('img').src = offering.offer.photos[0];
+    cardElement.querySelector('.popup__avatar').src = offering.author.avatar;
+    // cardTemplateFeatureElement.querySelector('.popup__feature--wifi').textContent = 'wifi';
+
+    return cardElement;
+  };
+
+  // Отрисовывает пины на странице
+  var drawCards = function () {
+    var filteredOffers = getFilteredOffers();
+    filteredOffers.map(function (offer) {
+      fragment.appendChild(createCard(offer));
+    });
+    map.insertBefore(fragment, mapFiltersContainer);
+  };
+
+  ///////////////////////////КАРТОЧКИ-end
 
   // Отображает на странице пины, в соответствии со значением фильтра по типу жилья,
   // предварительно удаляя результаты предыдущего отображения
