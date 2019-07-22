@@ -82,7 +82,6 @@
   // Передает параметры отрисовки пина соответствующим элементам в разметке
   var createCard = function (offering) {
     var cardElement = cardTemplate.cloneNode(true);
-    // var cardTemplateFeatureElement = cardTemplateFeatures.cloneNode(true);
 
     cardElement.querySelector('.popup__title').textContent = offering.offer.title;
     cardElement.querySelector('.popup__text--address').textContent = offering.offer.address;
@@ -90,9 +89,13 @@
     cardElement.querySelector('.popup__type').textContent = offerTypeValue[offering.offer.type];
     cardElement.querySelector('.popup__text--capacity').textContent = offering.offer.rooms + ' комнаты' + ' для ' + offering.offer.guests + ' гостей';
     cardElement.querySelector('.popup__text--time').textContent = 'Заезд после ' + offering.offer.checkin + ', ' + 'выезд до ' + offering.offer.checkout;
-    // cardElement.querySelector('.popup__features').textContent = offering.offer.features;
 
-    cardElement.querySelector('.popup__features').querySelector('.popup__feature--wifi').innerHTML = '<li class="popup__feature popup__feature--wifi"></li>';
+    cardElement.querySelector('.popup__features').innerHTML = '';
+    offering.offer.features.forEach(function (item, i) {
+      var featureItem = document.createElement('li');
+      cardElement.querySelector('.popup__features').appendChild(featureItem);
+      featureItem.classList.add('popup__feature', 'popup__feature--' + offering.offer.features[i]);
+    });
 
     cardElement.querySelector('.popup__description').textContent = offering.offer.description;
     cardElement.querySelector('.popup__photos').querySelector('img').src = offering.offer.photos[0];
