@@ -98,9 +98,24 @@
     });
 
     cardElement.querySelector('.popup__description').textContent = offering.offer.description;
-    cardElement.querySelector('.popup__photos').querySelector('img').src = offering.offer.photos[0];
+
+    for (var i = 0; i < offering.offer.photos.length; i++) {
+      var photoItem = cardElement.querySelector('.popup__photos').querySelector('.popup__photo').cloneNode(true);
+      // cardElement.querySelector('.popup__photos').innerHTML = '';
+      cardElement.querySelector('.popup__photos').appendChild(photoItem);
+      cardElement.querySelector('.popup__photos').querySelector('.popup__photo').src = offering.offer.photos[i];
+      // cardElement.querySelector('.popup__photos').removeChild(cardElement.querySelector('.popup__photos').nthChild(2));
+    }
+
+    // offering.offer.photos.forEach(function (item, i) {
+    //   var photoItem = cardElement.querySelector('.popup__photos').querySelector('.popup__photo').cloneNode(true);
+    //   // cardElement.querySelector('.popup__photos').innerHTML = '';
+    //   cardElement.querySelector('.popup__photos').appendChild(photoItem);
+    //   cardElement.querySelector('.popup__photos').querySelector('.popup__photo').src = offering.offer.photos[i];
+    // });
+
+
     cardElement.querySelector('.popup__avatar').src = offering.author.avatar;
-    // cardTemplateFeatureElement.querySelector('.popup__feature--wifi').textContent = 'wifi';
 
     return cardElement;
   };
