@@ -64,12 +64,13 @@
     mapPins.appendChild(fragment);
   };
 
-  // Отображает на страницы пины, в соответствии со значением фильтра по типу жилья
+  // Отображает на странице пины, в соответствии со значением фильтра по типу жилья,
+  // предварительно удаляя результаты предыдущего отображения
   housingTypeFilter.addEventListener('change', function () {
     var currentPinsArray = mapPins.querySelectorAll('.map__pin:not(.map__pin--main)');
-    for (var i = 0; i < currentPinsArray.length; i++) {
-      mapPins.removeChild(currentPinsArray[i]);
-    }
+    currentPinsArray.forEach(function (item) {
+      mapPins.removeChild(item);
+    });
     drawPins();
   });
 

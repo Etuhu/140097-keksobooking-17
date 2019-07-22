@@ -6,6 +6,11 @@
   var mapPinMainHeight = mapPinMain.offsetHeight;
   var addressInput = window.form.adForm.querySelector('#address');
 
+  var Coordinate = function (x, y) {
+    this.x = x;
+    this.y = y;
+  };
+
   // Извлекает числовое значение из строчного элемента и записывает его в поле ввода адреса
   // (с поправкой на то, что в адрес записываются координаты острого конца)
   var extractNumber = function (left, top, widthCorrect, heightCorrect) {
@@ -21,22 +26,13 @@
   mapPinMain.addEventListener('mousedown', function (evt) {
     evt.preventDefault();
 
-    var startCoords = {
-      x: evt.clientX,
-      y: evt.clientY
-    };
+    var startCoords = new Coordinate(evt.clientX, evt.clientY);
 
     // Задает расчёт координат маркера и их запись в поле адреса
     var calculateCoordMainPin = function (evtName) {
-      var shift = {
-        x: startCoords.x - evtName.clientX,
-        y: startCoords.y - evtName.clientY
-      };
+      var shift = new Coordinate(startCoords.x - evtName.clientX, startCoords.y - evtName.clientY);
 
-      startCoords = {
-        x: evtName.clientX,
-        y: evtName.clientY
-      };
+      startCoords = new Coordinate(evtName.clientX, evtName.clientY);
 
       var finishCoordX = mapPinMain.offsetLeft - shift.x;
       var finishCoordY = mapPinMain.offsetTop - shift.y;
