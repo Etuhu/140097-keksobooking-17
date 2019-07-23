@@ -5,6 +5,7 @@
   var mapPinMainWidth = mapPinMain.offsetWidth;
   var mapPinMainHeight = mapPinMain.offsetHeight;
   var addressInput = window.form.adForm.querySelector('#address');
+  var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
 
   var Coordinate = function (x, y) {
     this.x = x;
@@ -53,7 +54,7 @@
 
     var onMouseMove = function (moveEvt) {
       moveEvt.preventDefault();
-      window.activateMainPage();
+      window.map.activateMainPage();
       calculateCoordMainPin(moveEvt);
     };
 
@@ -71,4 +72,31 @@
     document.addEventListener('mousemove', onMouseMove);
     document.addEventListener('mouseup', onMouseUp);
   });
+
+  // Передает параметры отрисовки пина соответствующим элементам в разметке
+  var createMapPin = function (offering) {
+    var mapPinElement = pinTemplate.cloneNode(true);
+
+    mapPinElement.style.left = offering.location.x + 'px';
+    mapPinElement.style.top = offering.location.y + 'px';
+    mapPinElement.querySelector('img').src = offering.author.avatar;
+    mapPinElement.querySelector('img').alt = offering.offer.type;
+
+    return mapPinElement;
+  };
+
+  // Отрисовывает пины на странице
+  var drawPins = function () {
+    var filteredOffers = window.map.getFilteredOffers();
+    filteredOffers.map(function (offer) {
+      if (window.util.isNotEmpty(offer.offer)) {
+        window.map.fragment.appendChild(createMapPin(offer));
+      }
+    });
+    window.map.mapPins.appendChild(window.map.fragment);
+  };
+
+  window.pin = {
+    drawPins: drawPins
+  };
 })();

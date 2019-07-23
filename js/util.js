@@ -53,6 +53,11 @@
     }
   };
 
+  // Проверяет объект на наличие ключей и подтверждает, что объект не пустой
+  var isNotEmpty = function (obj) {
+    return Object.keys(obj).length > 0;
+  };
+
   window.mapSettings = {
     PIN_WIDTH: PIN_WIDTH,
     COORDINATE_Y_MIN: COORDINATE_Y_MIN,
@@ -63,6 +68,7 @@
   window.util = {
     ESC_KEYCODE: ESC_KEYCODE,
     HOUSING_SETTING: HOUSING_SETTING,
+    isNotEmpty: isNotEmpty,
     getRandom: getRandom,
     getGrowingNumber: getGrowingNumber,
     removeAttrFromFields: removeAttrFromFields,
