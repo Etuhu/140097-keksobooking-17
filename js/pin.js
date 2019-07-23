@@ -96,7 +96,5 @@
     window.map.mapPins.appendChild(window.map.fragment);
   };
 
-  window.pin = {
-    drawPins: drawPins
-  };
+  window.drawPins = drawPins;
 })();

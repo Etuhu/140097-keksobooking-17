@@ -37,8 +37,8 @@
       window.util.removeAttrFromFields(mapFilterSelects, 'disabled');
       window.backend.load(function (data) {
         offers = data;
-        window.pin.drawPins();
-        window.card.drawCards();
+        window.drawPins();
+        window.drawCards();
       }, drawingErrorMessage);
     }
   };
@@ -50,7 +50,7 @@
     currentPinsArray.forEach(function (item) {
       mapPins.removeChild(item);
     });
-    window.pin.drawPins();
+    window.drawPins();
   });
 
   // Отрисовывает сообщение об ошибке загрузки данных с сервера

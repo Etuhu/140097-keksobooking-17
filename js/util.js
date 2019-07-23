@@ -58,6 +58,12 @@
     return Object.keys(obj).length > 0;
   };
 
+  // Заменяет текстовое содержимое DOM-элемента
+  var insertTextContent = function (parentEl, childEl, fieldValue) {
+    parentEl.querySelector(childEl).textContent = fieldValue;
+  };
+
+
   window.mapSettings = {
     PIN_WIDTH: PIN_WIDTH,
     COORDINATE_Y_MIN: COORDINATE_Y_MIN,
@@ -70,6 +76,7 @@
     HOUSING_SETTING: HOUSING_SETTING,
     isNotEmpty: isNotEmpty,
     getRandom: getRandom,
+    insertTextContent: insertTextContent,
     getGrowingNumber: getGrowingNumber,
     removeAttrFromFields: removeAttrFromFields,
     setDependentValue: setDependentValue
