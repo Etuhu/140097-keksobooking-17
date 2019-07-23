@@ -63,6 +63,18 @@
     parentEl.querySelector(childEl).textContent = fieldValue;
   };
 
+  // Определяет верное окончание слова в зависимости от согласующегося с ним числа
+  var getEndingWord = function (number) {
+    if (number >= 10 && number <= 20 || number % 10 >= 5 && number % 10 <= 9) {
+      return 'комнат';
+    } else if (number % 10 >= 2 && number % 10 <= 4) {
+      return 'комнаты';
+    } else if (number % 10 === 1) {
+      return 'комната';
+    } else {
+      return 'комнат';
+    }
+  };
 
   window.mapSettings = {
     PIN_WIDTH: PIN_WIDTH,
@@ -76,6 +88,7 @@
     HOUSING_SETTING: HOUSING_SETTING,
     isNotEmpty: isNotEmpty,
     getRandom: getRandom,
+    getEndingWord: getEndingWord,
     insertTextContent: insertTextContent,
     getGrowingNumber: getGrowingNumber,
     removeAttrFromFields: removeAttrFromFields,

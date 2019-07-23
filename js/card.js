@@ -18,7 +18,7 @@
     window.util.insertTextContent(cardElement, '.popup__text--address', offering.offer.address);
     window.util.insertTextContent(cardElement, '.popup__text--price', offering.offer.price + '₽/ночь');
     window.util.insertTextContent(cardElement, '.popup__type', offerTypeValue[offering.offer.type]);
-    window.util.insertTextContent(cardElement, '.popup__text--capacity', offering.offer.rooms + ' комнаты' + ' для ' + offering.offer.guests + ' гостей');
+    window.util.insertTextContent(cardElement, '.popup__text--capacity', offering.offer.rooms + ' ' + window.util.getEndingWord(offering.offer.rooms) + ' для ' + offering.offer.guests + ' гостей');
     window.util.insertTextContent(cardElement, '.popup__text--time', 'Заезд после ' + offering.offer.checkin + ', ' + 'выезд до ' + offering.offer.checkout);
     window.util.insertTextContent(cardElement, '.popup__description', offering.offer.description);
 
