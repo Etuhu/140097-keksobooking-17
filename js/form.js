@@ -1,10 +1,14 @@
 'use strict';
 
 (function () {
+  var MIN_CAPACITY = 0;
+  var MAX_ROOM_NUMBER = 100;
   var adForm = document.querySelector('.ad-form');
   var housingTypeSelect = adForm.querySelector('#type');
   var timeInSelect = adForm.querySelector('#timein');
   var timeOutSelect = adForm.querySelector('#timeout');
+  var roomNumberSelect = adForm.querySelector('#room_number');
+  var capacitySelect = adForm.querySelector('#capacity');
 
   window.form = {
     adForm: adForm
@@ -40,4 +44,31 @@
     window.util.setDependentValue(timeOutSelect, timeInSelect);
   });
 
+  // Осуществляет валидацию полей по количеству комнат и количеству мест
+  var numberOfRoomValidation = function () {
+    var roomNumberSelectValue = parseInt(roomNumberSelect.value, 10);
+    var capacitySelectValue = parseInt(capacitySelect.value, 10);
+
+    var handleValidate = function (message) {
+      capacitySelect.setCustomValidity(message);
+    };
+
+    if (capacitySelectValue <= roomNumberSelectValue && capacitySelectValue > MIN_CAPACITY && roomNumberSelectValue !== MAX_ROOM_NUMBER) {
+      handleValidate('');
+    } else if (roomNumberSelectValue === MAX_ROOM_NUMBER && capacitySelectValue > MIN_CAPACITY) {
+      handleValidate('Жилье с указанными параметрами не предназначено для проживания гостей');
+    } else if (capacitySelectValue === MIN_CAPACITY && roomNumberSelectValue === MAX_ROOM_NUMBER) {
+      handleValidate('');
+    } else {
+      handleValidate('Количество комнат не должно быть меньше количества гостей');
+    }
+  };
+
+  roomNumberSelect.addEventListener('click', function () {
+    numberOfRoomValidation();
+  });
+
+  capacitySelect.addEventListener('click', function () {
+    numberOfRoomValidation();
+  });
 })();
