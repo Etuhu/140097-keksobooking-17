@@ -53,6 +53,45 @@
     }
   };
 
+  // Проверяет объект на наличие ключей и подтверждает, что объект не пустой
+  var isNotEmpty = function (obj) {
+    return Object.keys(obj).length > 0;
+  };
+
+  // Заменяет текстовое содержимое DOM-элемента
+  var insertTextContent = function (parentEl, childEl, fieldValue) {
+    parentEl.querySelector(childEl).textContent = fieldValue;
+  };
+
+  // Определяет верное окончание слова в зависимости от согласующегося с ним числа
+  var getEndingWord = function (number) {
+    if (number >= 10 && number <= 20 || number % 10 >= 5 && number % 10 <= 9) {
+      return 'комнат';
+    } else if (number % 10 >= 2 && number % 10 <= 4) {
+      return 'комнаты';
+    } else if (number % 10 === 1) {
+      return 'комната';
+    } else {
+      return 'комнат';
+    }
+  };
+
+  // Управляет сокрытием DOM-элемента на странице
+  var hiddenElement = function (elem, result) {
+    elem.hidden = result;
+  };
+
+  // Управляет удалением класса у DOM-элемента
+  var removeClass = function (elem, className) {
+    elem.classList.remove(className);
+  };
+
+  // Управляет добавлением класса DOM-элементу
+  var addClass = function (elem, className) {
+    elem.classList.add(className);
+  };
+
+
   window.mapSettings = {
     PIN_WIDTH: PIN_WIDTH,
     COORDINATE_Y_MIN: COORDINATE_Y_MIN,
@@ -63,9 +102,15 @@
   window.util = {
     ESC_KEYCODE: ESC_KEYCODE,
     HOUSING_SETTING: HOUSING_SETTING,
+    isNotEmpty: isNotEmpty,
     getRandom: getRandom,
+    getEndingWord: getEndingWord,
+    insertTextContent: insertTextContent,
     getGrowingNumber: getGrowingNumber,
     removeAttrFromFields: removeAttrFromFields,
-    setDependentValue: setDependentValue
+    setDependentValue: setDependentValue,
+    hiddenElement: hiddenElement,
+    removeClass: removeClass,
+    addClass: addClass
   };
 })();

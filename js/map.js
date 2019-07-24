@@ -9,7 +9,6 @@
   var mapFilter = document.querySelector('.map__filters');
   var mapFilterFieldsets = mapFilter.querySelectorAll('fieldset');
   var mapFilterSelects = mapFilter.querySelectorAll('select');
-  var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
   var errorTemplate = document.querySelector('#error').content.querySelector('.error');
   var mapPins = document.querySelector('.map__pins');
   var fragment = document.createDocumentFragment();
@@ -31,47 +30,64 @@
   var activateMainPage = function () {
     var isMapDisabled = map.classList.contains('map--faded');
     if (isMapDisabled) {
-      map.classList.remove('map--faded');
+      window.util.removeClass(map, 'map--faded');
       window.form.adForm.classList.remove('ad-form--disabled');
       window.util.removeAttrFromFields(adFormFieldsets, 'disabled');
       window.util.removeAttrFromFields(mapFilterFieldsets, 'disabled');
       window.util.removeAttrFromFields(mapFilterSelects, 'disabled');
       window.backend.load(function (data) {
         offers = data;
-        drawPins();
+        window.drawPins();
+        window.drawCards();
+        selectedPin();
       }, drawingErrorMessage);
     }
   };
 
-  // Передает параметры отрисовки пина соответствующим элементам в разметке
-  var createMapPin = function (offering) {
-    var mapPinElement = pinTemplate.cloneNode(true);
-
-    mapPinElement.style.left = offering.location.x + 'px';
-    mapPinElement.style.top = offering.location.y + 'px';
-    mapPinElement.querySelector('img').src = offering.author.avatar;
-    mapPinElement.querySelector('img').alt = offering.offer.type;
-
-    return mapPinElement;
-  };
-
-  // Отрисовывает пины на странице
-  var drawPins = function () {
-    var filteredOffers = getFilteredOffers();
-    filteredOffers.map(function (offer) {
-      fragment.appendChild(createMapPin(offer));
-    });
-    mapPins.appendChild(fragment);
-  };
-
-  // Отображает на страницы пины, в соответствии со значением фильтра по типу жилья
+  // Отображает на странице пины и карточки, в соответствии со значением фильтра по типу жилья,
+  // предварительно удаляя результаты предыдущего отображения
   housingTypeFilter.addEventListener('change', function () {
     var currentPinsArray = mapPins.querySelectorAll('.map__pin:not(.map__pin--main)');
-    for (var i = 0; i < currentPinsArray.length; i++) {
-      mapPins.removeChild(currentPinsArray[i]);
-    }
-    drawPins();
+    var currentCardsArray = map.querySelectorAll('.map__card');
+    currentPinsArray.forEach(function (item) {
+      mapPins.removeChild(item);
+    });
+    currentCardsArray.forEach(function (item) {
+      map.removeChild(item);
+    });
+    window.drawPins();
+    window.drawCards();
+    selectedPin();
   });
+
+  // Управляет отображением на карте активных пинов и соответствующих им карточек объявлений
+  var selectedPin = function () {
+    var mapPinsArray = mapPins.querySelectorAll('.map__pin:not(.map__pin--main)');
+    var mapCardsArray = map.querySelectorAll('.map__card');
+
+    mapPinsArray.forEach(function (item, i) {
+      item.addEventListener('click', function () {
+        mapPinsArray.forEach(function (itm) {
+          window.util.removeClass(itm, 'map__pin--active');
+        });
+        mapCardsArray.forEach(function (it) {
+          window.util.hiddenElement(it, true);
+        });
+        window.util.addClass(item, 'map__pin--active');
+        window.util.hiddenElement(mapCardsArray[i], false);
+      });
+
+      mapCardsArray[i].querySelector('.popup__close').addEventListener('click', function () {
+        window.util.hiddenElement(mapCardsArray[i], true);
+      });
+      document.addEventListener('keydown', function (evt) {
+        if (evt.keyCode === window.util.ESC_KEYCODE) {
+          window.util.hiddenElement(mapCardsArray[i], true);
+          window.util.removeClass(mapPinsArray[i], 'map__pin--active');
+        }
+      });
+    });
+  };
 
   // Отрисовывает сообщение об ошибке загрузки данных с сервера
   var errorHandler = function () {
@@ -85,5 +101,11 @@
     document.querySelector('.error__message').textContent = errorMessage;
   };
 
-  window.activateMainPage = activateMainPage;
+  window.map = {
+    activateMainPage: activateMainPage,
+    getFilteredOffers: getFilteredOffers,
+    fragment: fragment,
+    map: map,
+    mapPins: mapPins
+  };
 })();
