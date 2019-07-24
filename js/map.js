@@ -30,7 +30,7 @@
   var activateMainPage = function () {
     var isMapDisabled = map.classList.contains('map--faded');
     if (isMapDisabled) {
-      map.classList.remove('map--faded');
+      window.util.removeClass(map, 'map--faded');
       window.form.adForm.classList.remove('ad-form--disabled');
       window.util.removeAttrFromFields(adFormFieldsets, 'disabled');
       window.util.removeAttrFromFields(mapFilterFieldsets, 'disabled');
@@ -39,19 +39,55 @@
         offers = data;
         window.drawPins();
         window.drawCards();
+        selectedPin();
       }, drawingErrorMessage);
     }
   };
 
-  // Отображает на странице пины, в соответствии со значением фильтра по типу жилья,
+  // Отображает на странице пины и карточки, в соответствии со значением фильтра по типу жилья,
   // предварительно удаляя результаты предыдущего отображения
   housingTypeFilter.addEventListener('change', function () {
     var currentPinsArray = mapPins.querySelectorAll('.map__pin:not(.map__pin--main)');
+    var currentCardsArray = map.querySelectorAll('.map__card');
     currentPinsArray.forEach(function (item) {
       mapPins.removeChild(item);
     });
+    currentCardsArray.forEach(function (item) {
+      map.removeChild(item);
+    });
     window.drawPins();
+    window.drawCards();
+    selectedPin();
   });
+
+  // Управляет отображением на карте активных пинов и соответствующих им карточек объявлений
+  var selectedPin = function () {
+    var mapPinsArray = mapPins.querySelectorAll('.map__pin:not(.map__pin--main)');
+    var mapCardsArray = map.querySelectorAll('.map__card');
+
+    mapPinsArray.forEach(function (item, i) {
+      item.addEventListener('click', function () {
+        mapPinsArray.forEach(function (itm) {
+          window.util.removeClass(itm, 'map__pin--active');
+        });
+        mapCardsArray.forEach(function (it) {
+          window.util.hiddenElement(it, true);
+        });
+        window.util.addClass(item, 'map__pin--active');
+        window.util.hiddenElement(mapCardsArray[i], false);
+      });
+
+      mapCardsArray[i].querySelector('.popup__close').addEventListener('click', function () {
+        window.util.hiddenElement(mapCardsArray[i], true);
+      });
+      document.addEventListener('keydown', function (evt) {
+        if (evt.keyCode === window.util.ESC_KEYCODE) {
+          window.util.hiddenElement(mapCardsArray[i], true);
+          window.util.removeClass(mapPinsArray[i], 'map__pin--active');
+        }
+      });
+    });
+  };
 
   // Отрисовывает сообщение об ошибке загрузки данных с сервера
   var errorHandler = function () {

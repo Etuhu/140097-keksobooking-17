@@ -29,24 +29,25 @@
       featureItem.classList.add('popup__feature', 'popup__feature--' + offering.offer.features[i]);
     });
     if (offering.offer.features.length === 0) {
-      cardElement.querySelector('.popup__features').hidden = true;
+      window.util.hiddenElement(cardElement.querySelector('.popup__features'), true);
     }
 
     cardElement.querySelector('.popup__photos').innerHTML = '';
     offering.offer.photos.forEach(function (item, i) {
       var photoItem = document.createElement('img');
       cardElement.querySelector('.popup__photos').appendChild(photoItem);
-      photoItem.classList.add('popup__photo');
+      window.util.addClass(photoItem, 'popup__photo');
       photoItem.width = 45;
       photoItem.height = 45;
       photoItem.alt = 'Фотография жилья';
       photoItem.src = offering.offer.photos[i];
     });
     if (offering.offer.photos.length === 0) {
-      cardElement.querySelector('.popup__photos').hidden = true;
+      window.util.hiddenElement(cardElement.querySelector('.popup__photos'), true);
     }
 
     cardElement.querySelector('.popup__avatar').src = offering.author.avatar;
+    window.util.hiddenElement(cardElement, true);
 
     return cardElement;
   };

@@ -76,6 +76,22 @@
     }
   };
 
+  // Управляет сокрытием DOM-элемента на странице
+  var hiddenElement = function (elem, result) {
+    elem.hidden = result;
+  };
+
+  // Управляет удалением класса у DOM-элемента
+  var removeClass = function (elem, className) {
+    elem.classList.remove(className);
+  };
+
+  // Управляет добавлением класса DOM-элементу
+  var addClass = function (elem, className) {
+    elem.classList.add(className);
+  };
+
+
   window.mapSettings = {
     PIN_WIDTH: PIN_WIDTH,
     COORDINATE_Y_MIN: COORDINATE_Y_MIN,
@@ -92,6 +108,9 @@
     insertTextContent: insertTextContent,
     getGrowingNumber: getGrowingNumber,
     removeAttrFromFields: removeAttrFromFields,
-    setDependentValue: setDependentValue
+    setDependentValue: setDependentValue,
+    hiddenElement: hiddenElement,
+    removeClass: removeClass,
+    addClass: addClass
   };
 })();
