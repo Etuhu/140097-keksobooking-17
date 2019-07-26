@@ -33,24 +33,27 @@
 
     checkAndPasteElement(offering.offer.title, '.popup__title');
     checkAndPasteElement(offering.offer.address, '.popup__text--address');
-    checkAndPasteElement(offering.offer.price + '₽/ночь', '.popup__text--price');
     checkAndPasteElement(offering.offer.description, '.popup__description');
+
+    checkCompletenessOfData(offering.offer.price, '.popup__text--price');
+    if (offering.offer.price !== '') {
+      window.util.insertTextContent(cardElement, '.popup__text--price', offering.offer.price + '₽/ночь');
+    }
 
     checkCompletenessOfData(offering.offer.type, '.popup__type');
     if (offering.offer.type !== '') {
       window.util.insertTextContent(cardElement, '.popup__type', offerTypeValue[offering.offer.type]);
     }
 
-    checkCompletenessOfData(offering.offer.rooms && offering.offer.guests, '.popup__text--capacity');
+    checkCompletenessOfData(offering.offer.rooms || offering.offer.guests, '.popup__text--capacity');
     if (offering.offer.rooms !== '' || offering.offer.guests !== '') {
       window.util.insertTextContent(cardElement, '.popup__text--capacity', offering.offer.rooms + ' ' + window.util.getEndingWord(offering.offer.rooms, 'комната', 'комнаты', 'комнат') + ' для ' + offering.offer.guests + ' ' + window.util.getEndingWord(offering.offer.guests, 'гостя', 'гостей', 'гостей'));
     }
 
-    checkCompletenessOfData(offering.offer.checkin && offering.offer.checkout, '.popup__text--time');
+    checkCompletenessOfData(offering.offer.checkin || offering.offer.checkout, '.popup__text--time');
     if (offering.offer.checkin !== '' || offering.offer.checkout !== '') {
       window.util.insertTextContent(cardElement, '.popup__text--time', 'Заезд после ' + offering.offer.checkin + ', ' + 'выезд до ' + offering.offer.checkout);
     }
-
     checkCompletenessOfData(offering.author.avatar, '.popup__avatar');
     if (offering.author.avatar !== '') {
       cardElement.querySelector('.popup__avatar').src = offering.author.avatar;
