@@ -40,17 +40,17 @@
   var activateMainPage = function () {
     var isMapDisabled = map.classList.contains('map--faded');
     if (isMapDisabled) {
-      window.util.removeClass(map, 'map--faded');
+      map.classList.remove('map--faded');
       window.form.adForm.classList.remove('ad-form--disabled');
       window.util.removeAttrFromFields(adFormFieldsets, 'disabled');
       window.util.removeAttrFromFields(mapFilterFieldsets, 'disabled');
       window.util.removeAttrFromFields(mapFilterSelects, 'disabled');
-      window.backend.load(function (data) {
+      window.backend.createSendRequest(function (data) {
         offers = data;
         window.drawPins();
         window.drawCards();
         selectedPin();
-      }, drawingErrorMessage);
+      }, drawingErrorMessage, window.util.GET_URL, 'GET');
     }
   };
 
@@ -78,12 +78,12 @@
     mapPinsArray.forEach(function (item, i) {
       item.addEventListener('click', function () {
         mapPinsArray.forEach(function (itm) {
-          window.util.removeClass(itm, 'map__pin--active');
+          itm.classList.remove('map__pin--active');
         });
         mapCardsArray.forEach(function (it) {
           it.hidden = true;
         });
-        window.util.addClass(item, 'map__pin--active');
+        item.classList.add('map__pin--active');
         mapCardsArray[i].hidden = false;
       });
 
@@ -93,7 +93,7 @@
       document.addEventListener('keydown', function (evt) {
         if (evt.keyCode === window.util.ESC_KEYCODE) {
           mapCardsArray[i].hidden = true;
-          window.util.removeClass(mapPinsArray[i], 'map__pin--active');
+          mapPinsArray[i].classList.remove('map__pin--active');
         }
       });
     });

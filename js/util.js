@@ -2,6 +2,7 @@
 
 (function () {
   var ESC_KEYCODE = 27;
+  var GET_URL = 'https://js.dump.academy/keksobooking/data';
   var COORDINATE_Y_MIN = 130;
   var COORDINATE_Y_MAX = 630;
   var PIN_WIDTH = 50;
@@ -23,6 +24,7 @@
       placeholder: 0
     }
   };
+
   var mapWidth = document.querySelector('.map').offsetWidth;
 
   // Удаляет атрибут у нескольких элементов одного типа
@@ -63,29 +65,22 @@
     parentEl.querySelector(childEl).textContent = fieldValue;
   };
 
-  // Определяет верное окончание слова в зависимости от согласующегося с ним числа
-  var getEndingWord = function (number) {
-    if (number >= 10 && number <= 20 || number % 10 >= 5 && number % 10 <= 9) {
-      return 'комнат';
-    } else if (number % 10 >= 2 && number % 10 <= 4) {
-      return 'комнаты';
-    } else if (number % 10 === 1) {
-      return 'комната';
-    } else {
-      return 'комнат';
+  // Определяет верное окончание существительного в зависимости от согласующегося с ним числа
+  var getEndingWord = function (number, one, two, five) {
+    number = Math.abs(number);
+    number %= 100;
+    if (number >= 5 && number <= 20) {
+      return five;
     }
+    number %= 10;
+    if (number === 1) {
+      return one;
+    }
+    if (number >= 2 && number <= 4) {
+      return two;
+    }
+    return five;
   };
-
-  // Управляет удалением класса у DOM-элемента
-  var removeClass = function (elem, className) {
-    elem.classList.remove(className);
-  };
-
-  // Управляет добавлением класса DOM-элементу
-  var addClass = function (elem, className) {
-    elem.classList.add(className);
-  };
-
 
   window.mapSettings = {
     PIN_WIDTH: PIN_WIDTH,
@@ -96,6 +91,7 @@
 
   window.util = {
     ESC_KEYCODE: ESC_KEYCODE,
+    GET_URL: GET_URL,
     HOUSING_SETTING: HOUSING_SETTING,
     isNotEmpty: isNotEmpty,
     getRandom: getRandom,
@@ -103,8 +99,6 @@
     insertTextContent: insertTextContent,
     getGrowingNumber: getGrowingNumber,
     removeAttrFromFields: removeAttrFromFields,
-    setDependentValue: setDependentValue,
-    removeClass: removeClass,
-    addClass: addClass
+    setDependentValue: setDependentValue
   };
 })();
