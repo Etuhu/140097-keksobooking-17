@@ -23,9 +23,10 @@
       cardElement.querySelector(element).hidden = data === '';
     };
 
-    // Отображает текстовый элемент карточки на странице, если с сервера поступили полные данные
+    // Проверяет полноту поступивших с сервера данных и отображает текстовый элемент карточки на странице, если поступили полные данные
     var checkAndPasteElement = function (data, element) {
-      if (!checkCompletenessOfData(data, element)) {
+      checkCompletenessOfData(data, element);
+      if (data !== '') {
         window.util.insertTextContent(cardElement, element, data);
       }
     };
@@ -35,22 +36,28 @@
     checkAndPasteElement(offering.offer.price + '₽/ночь', '.popup__text--price');
     checkAndPasteElement(offering.offer.description, '.popup__description');
 
-    if (!checkCompletenessOfData(offering.offer.type, '.popup__type')) {
+    checkCompletenessOfData(offering.offer.type, '.popup__type');
+    if (offering.offer.type !== '') {
       window.util.insertTextContent(cardElement, '.popup__type', offerTypeValue[offering.offer.type]);
     }
-    if (!checkCompletenessOfData(offering.offer.rooms || offering.offer.guests, '.popup__text--capacity')) {
+
+    checkCompletenessOfData(offering.offer.rooms && offering.offer.guests, '.popup__text--capacity');
+    if (offering.offer.rooms !== '' || offering.offer.guests !== '') {
       window.util.insertTextContent(cardElement, '.popup__text--capacity', offering.offer.rooms + ' ' + window.util.getEndingWord(offering.offer.rooms, 'комната', 'комнаты', 'комнат') + ' для ' + offering.offer.guests + ' ' + window.util.getEndingWord(offering.offer.guests, 'гостя', 'гостей', 'гостей'));
     }
-    if (!checkCompletenessOfData(offering.offer.checkin || offering.offer.checkout, '.popup__text--time')) {
+
+    checkCompletenessOfData(offering.offer.checkin && offering.offer.checkout, '.popup__text--time');
+    if (offering.offer.checkin !== '' || offering.offer.checkout !== '') {
       window.util.insertTextContent(cardElement, '.popup__text--time', 'Заезд после ' + offering.offer.checkin + ', ' + 'выезд до ' + offering.offer.checkout);
     }
-    if (!checkCompletenessOfData(offering.author.avatar, '.popup__avatar')) {
+
+    checkCompletenessOfData(offering.author.avatar, '.popup__avatar');
+    if (offering.author.avatar !== '') {
       cardElement.querySelector('.popup__avatar').src = offering.author.avatar;
     }
 
-
     cardElement.querySelector('.popup__features').innerHTML = '';
-    if (offering.offer.features.length === 0) {
+    if (!offering.offer.features.length) {
       cardElement.querySelector('.popup__features').hidden = true;
     } else {
       offering.offer.features.forEach(function (item) {
@@ -61,7 +68,7 @@
     }
 
     cardElement.querySelector('.popup__photos').innerHTML = '';
-    if (offering.offer.photos.length === 0) {
+    if (!offering.offer.photos.length) {
       cardElement.querySelector('.popup__photos').hidden = true;
     } else {
       offering.offer.photos.forEach(function (item) {
