@@ -2,7 +2,7 @@
 
 (function () {
   // Удаляет сообщение об ошибке из разметки по клику на элемент-кнопку, клику на произвольную область и нажатию клавиши Esc
-  var deleteErrorModal = function () {
+  var addDeleteErrorModalListeners = function () {
     var errorModal = document.querySelector('.error');
     var errorButton = document.querySelector('.error__button');
 
@@ -26,12 +26,10 @@
   };
 
   // Загружает информацию о размещенных на карте объявлениях с сервера
-  var load = function (onLoad, onError) {
-    var loadAddress = 'https://js.dump.academy/keksobooking/data';
-
+  var createSendRequest = function (onLoad, onError, url, method) {
     var handleError = function (message) {
       onError(message);
-      deleteErrorModal();
+      addDeleteErrorModalListeners();
     };
 
     var xhr = new XMLHttpRequest();
@@ -53,11 +51,11 @@
 
     xhr.timeout = 10000; // 10s
 
-    xhr.open('GET', loadAddress);
+    xhr.open(method, url);
     xhr.send();
   };
 
   window.backend = {
-    load: load
+    createSendRequest: createSendRequest
   };
 })();

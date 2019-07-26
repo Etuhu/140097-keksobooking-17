@@ -13,16 +13,26 @@
   var mapPins = document.querySelector('.map__pins');
   var fragment = document.createDocumentFragment();
   var housingTypeFilter = document.querySelector('#housing-type');
+  // var housingRoomsFilter = document.querySelector('#housing-rooms');
 
   // Осуществляет фильтрацию массива объявлений в зависимости от выбарнного типа жилья
   var getFilteredOffers = function () {
     var filterValue = housingTypeFilter.value;
+    // var filterRoomsValue = housingRoomsFilter.value;
     var resultArray =
       filterValue === 'any' ?
         offers :
         offers.filter(function (offering) {
           return offering.offer.type === housingTypeFilter.value;
         });
+
+    // var resultRoomsArray =
+    //   filterRoomsValue === 'any' ?
+    //     offers :
+    //     offers.filter(function (offering) {
+    //       return offering.offer.rooms === housingRoomsFilter.value;
+    //     });
+    // return resultArray.concat(resultRoomsArray);
     return resultArray.slice(0, MAX_PIN_COUNT);
   };
 
@@ -30,17 +40,17 @@
   var activateMainPage = function () {
     var isMapDisabled = map.classList.contains('map--faded');
     if (isMapDisabled) {
-      window.util.removeClass(map, 'map--faded');
+      map.classList.remove('map--faded');
       window.form.adForm.classList.remove('ad-form--disabled');
       window.util.removeAttrFromFields(adFormFieldsets, 'disabled');
       window.util.removeAttrFromFields(mapFilterFieldsets, 'disabled');
       window.util.removeAttrFromFields(mapFilterSelects, 'disabled');
-      window.backend.load(function (data) {
+      window.backend.createSendRequest(function (data) {
         offers = data;
         window.drawPins();
         window.drawCards();
         selectedPin();
-      }, drawingErrorMessage);
+      }, drawingErrorMessage, window.util.GET_URL, 'GET');
     }
   };
 
@@ -68,22 +78,22 @@
     mapPinsArray.forEach(function (item, i) {
       item.addEventListener('click', function () {
         mapPinsArray.forEach(function (itm) {
-          window.util.removeClass(itm, 'map__pin--active');
+          itm.classList.remove('map__pin--active');
         });
         mapCardsArray.forEach(function (it) {
-          window.util.hiddenElement(it, true);
+          it.hidden = true;
         });
-        window.util.addClass(item, 'map__pin--active');
-        window.util.hiddenElement(mapCardsArray[i], false);
+        item.classList.add('map__pin--active');
+        mapCardsArray[i].hidden = false;
       });
 
       mapCardsArray[i].querySelector('.popup__close').addEventListener('click', function () {
-        window.util.hiddenElement(mapCardsArray[i], true);
+        mapCardsArray[i].hidden = true;
       });
       document.addEventListener('keydown', function (evt) {
         if (evt.keyCode === window.util.ESC_KEYCODE) {
-          window.util.hiddenElement(mapCardsArray[i], true);
-          window.util.removeClass(mapPinsArray[i], 'map__pin--active');
+          mapCardsArray[i].hidden = true;
+          mapPinsArray[i].classList.remove('map__pin--active');
         }
       });
     });
