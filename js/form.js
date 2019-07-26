@@ -64,11 +64,11 @@
     }
   };
 
-  roomNumberSelect.addEventListener('click', function () {
+  roomNumberSelect.addEventListener('change', function () {
     numberOfRoomValidation();
   });
 
-  capacitySelect.addEventListener('click', function () {
+  capacitySelect.addEventListener('change', function () {
     numberOfRoomValidation();
   });
 })();

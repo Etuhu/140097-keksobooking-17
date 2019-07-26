@@ -13,16 +13,26 @@
   var mapPins = document.querySelector('.map__pins');
   var fragment = document.createDocumentFragment();
   var housingTypeFilter = document.querySelector('#housing-type');
+  // var housingRoomsFilter = document.querySelector('#housing-rooms');
 
   // Осуществляет фильтрацию массива объявлений в зависимости от выбарнного типа жилья
   var getFilteredOffers = function () {
     var filterValue = housingTypeFilter.value;
+    // var filterRoomsValue = housingRoomsFilter.value;
     var resultArray =
       filterValue === 'any' ?
         offers :
         offers.filter(function (offering) {
           return offering.offer.type === housingTypeFilter.value;
         });
+
+    // var resultRoomsArray =
+    //   filterRoomsValue === 'any' ?
+    //     offers :
+    //     offers.filter(function (offering) {
+    //       return offering.offer.rooms === housingRoomsFilter.value;
+    //     });
+    // return resultArray.concat(resultRoomsArray);
     return resultArray.slice(0, MAX_PIN_COUNT);
   };
 
@@ -71,18 +81,18 @@
           window.util.removeClass(itm, 'map__pin--active');
         });
         mapCardsArray.forEach(function (it) {
-          window.util.hiddenElement(it, true);
+          it.hidden = true;
         });
         window.util.addClass(item, 'map__pin--active');
-        window.util.hiddenElement(mapCardsArray[i], false);
+        mapCardsArray[i].hidden = false;
       });
 
       mapCardsArray[i].querySelector('.popup__close').addEventListener('click', function () {
-        window.util.hiddenElement(mapCardsArray[i], true);
+        mapCardsArray[i].hidden = true;
       });
       document.addEventListener('keydown', function (evt) {
         if (evt.keyCode === window.util.ESC_KEYCODE) {
-          window.util.hiddenElement(mapCardsArray[i], true);
+          mapCardsArray[i].hidden = true;
           window.util.removeClass(mapPinsArray[i], 'map__pin--active');
         }
       });

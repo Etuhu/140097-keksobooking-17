@@ -76,11 +76,6 @@
     }
   };
 
-  // Управляет сокрытием DOM-элемента на странице
-  var hiddenElement = function (elem, result) {
-    elem.hidden = result;
-  };
-
   // Управляет удалением класса у DOM-элемента
   var removeClass = function (elem, className) {
     elem.classList.remove(className);
@@ -109,7 +104,6 @@
     getGrowingNumber: getGrowingNumber,
     removeAttrFromFields: removeAttrFromFields,
     setDependentValue: setDependentValue,
-    hiddenElement: hiddenElement,
     removeClass: removeClass,
     addClass: addClass
   };

@@ -29,7 +29,7 @@
       featureItem.classList.add('popup__feature', 'popup__feature--' + offering.offer.features[i]);
     });
     if (offering.offer.features.length === 0) {
-      window.util.hiddenElement(cardElement.querySelector('.popup__features'), true);
+      cardElement.querySelector('.popup__features').hidden = true;
     }
 
     cardElement.querySelector('.popup__photos').innerHTML = '';
@@ -43,11 +43,11 @@
       photoItem.src = offering.offer.photos[i];
     });
     if (offering.offer.photos.length === 0) {
-      window.util.hiddenElement(cardElement.querySelector('.popup__photos'), true);
+      cardElement.querySelector('.popup__photos').hidden = true;
     }
 
     cardElement.querySelector('.popup__avatar').src = offering.author.avatar;
-    window.util.hiddenElement(cardElement, true);
+    cardElement.hidden = true;
 
     return cardElement;
   };
