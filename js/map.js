@@ -37,6 +37,12 @@
     return resultArray.slice(0, MAX_PIN_COUNT);
   };
 
+  // Отрисовывает сообщение об ошибке загрузки данных с сервера
+  var drawingErrorMessage = function (errorMessage) {
+    window.util.pastePopup(mainPage, errorTemplate, fragment);
+    document.querySelector('.error__message').textContent = errorMessage;
+  };
+
   // Переводит главную страницу и ее элементы в активный режим
   var activateMainPage = function () {
     var isMapDisabled = map.classList.contains('map--faded');
@@ -100,35 +106,40 @@
     });
   };
 
-  // Отрисовывает сообщение об ошибке загрузки данных с сервера
-  var errorHandler = function () {
-    var errorBlock = errorTemplate.cloneNode(true);
-    return errorBlock;
-  };
-
-  var drawingErrorMessage = function (errorMessage) {
-    fragment.appendChild(errorHandler());
-    mainPage.appendChild(fragment);
-    document.querySelector('.error__message').textContent = errorMessage;
-  };
-
-
   /////////////////////ОТПРАВКА ФОРМЫ
 
-  // Отрисовывает сообщение об успешной отправке данных формы
-  var successHandler = function () {
-    var successBlock = successTemplate.cloneNode(true);
-    return successBlock;
-  };
+  // Осуществляет сброс полей формы и возврат страницы к неактивному состоянию
+  // var resetFormAndDeactivatePage = function () {
+  //   mapFilter.reset();
+  //   window.form.adForm.reset();
+  //
+  //   var currentPinsArray = mapPins.querySelectorAll('.map__pin:not(.map__pin--main)');
+  //   var currentCardsArray = map.querySelectorAll('.map__card');
+  //   currentPinsArray.forEach(function (item) {
+  //     mapPins.removeChild(item);
+  //   });
+  //   currentCardsArray.forEach(function (item) {
+  //     map.removeChild(item);
+  //   });
+  //
+  //   window.util.setAttrFromFields(adFormFieldsets, 'disabled');
+  //   window.util.setAttrFromFields(mapFilterFieldsets, 'disabled');
+  //   window.util.setAttrFromFields(mapFilterSelects, 'disabled');
+  //   window.form.adForm.classList.add('ad-form--disabled');
+  //   map.classList.add('map--faded');
+  //
+  //   window.pin.mapPinMain.style.left = window.mapSettings.MAP_PIN_MAIN_START_COORD_X + 'px';
+  //   window.pin.mapPinMain.style.top = window.mapSettings.MAP_PIN_MAIN_START_COORD_Y + 'px';
+  //   window.pin.extractNumber(window.pin.mapPinMain.style.left, window.pin.mapPinMain.style.top, 0, 0);
+  // };
 
+  // Отрисовывает сообщение об успешной отправке данных формы
   var drawingSuccessMessage = function () {
-    fragment.appendChild(successHandler());
-    mainPage.appendChild(fragment);
+    window.util.pastePopup(mainPage, successTemplate, fragment);
   };
 
   window.form.adForm.addEventListener('submit', function (evt) {
     evt.preventDefault();
-
     window.backend.createSendRequest(drawingSuccessMessage, drawingErrorMessage, window.util.POST_URL, 'POST', new FormData(window.form.adForm));
 
     mapFilter.reset();
@@ -153,6 +164,33 @@
     window.pin.mapPinMain.style.top = window.mapSettings.MAP_PIN_MAIN_START_COORD_Y + 'px';
     window.pin.extractNumber(window.pin.mapPinMain.style.left, window.pin.mapPinMain.style.top, 0, 0);
   });
+
+  window.form.adForm.addEventListener('reset', function (evt) {
+    evt.preventDefault();
+
+    mapFilter.reset();
+    window.form.adForm.reset();
+
+    var currentPinsArray = mapPins.querySelectorAll('.map__pin:not(.map__pin--main)');
+    var currentCardsArray = map.querySelectorAll('.map__card');
+    currentPinsArray.forEach(function (item) {
+      mapPins.removeChild(item);
+    });
+    currentCardsArray.forEach(function (item) {
+      map.removeChild(item);
+    });
+
+    window.util.setAttrFromFields(adFormFieldsets, 'disabled');
+    window.util.setAttrFromFields(mapFilterFieldsets, 'disabled');
+    window.util.setAttrFromFields(mapFilterSelects, 'disabled');
+    window.form.adForm.classList.add('ad-form--disabled');
+    map.classList.add('map--faded');
+
+    window.pin.mapPinMain.style.left = window.mapSettings.MAP_PIN_MAIN_START_COORD_X + 'px';
+    window.pin.mapPinMain.style.top = window.mapSettings.MAP_PIN_MAIN_START_COORD_Y + 'px';
+    window.pin.extractNumber(window.pin.mapPinMain.style.left, window.pin.mapPinMain.style.top, 0, 0);
+  });
+
 
   /////////////////////ОТПРАВКА ФОРМЫ
 

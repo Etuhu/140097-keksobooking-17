@@ -92,6 +92,19 @@
     return five;
   };
 
+  // Генерирует из шаблона всплывающее сообщение
+  var popupMessageHandler = function (template) {
+    var popupBlock = template.cloneNode(true);
+    return popupBlock;
+  };
+
+  // Добавляет в разметку отрисованное всплывающее сообщение
+  var pastePopup = function (parent, template, fragment) {
+    fragment.appendChild(popupMessageHandler(template));
+    parent.appendChild(fragment);
+  };
+
+
   window.mapSettings = {
     PIN_WIDTH: PIN_WIDTH,
     COORDINATE_Y_MIN: COORDINATE_Y_MIN,
@@ -106,6 +119,7 @@
     GET_URL: GET_URL,
     POST_URL: POST_URL,
     HOUSING_SETTING: HOUSING_SETTING,
+    pastePopup: pastePopup,
     isNotEmpty: isNotEmpty,
     getRandom: getRandom,
     getEndingWord: getEndingWord,

@@ -60,7 +60,7 @@
       if (xhr.status === 200) {
         handleSuccess();
       } else {
-        handleError('Ошибка загрузки объявления. Статус ответа сервера: ' + xhr.status + ' ' + xhr.statusText);
+        handleError('Ошибка обработки данных. Статус ответа сервера: ' + xhr.status + ' ' + xhr.statusText);
       }
     });
     xhr.addEventListener('error', function () {

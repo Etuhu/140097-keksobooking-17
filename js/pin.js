@@ -16,7 +16,7 @@
   // (с поправкой на то, что в адрес записываются координаты острого конца)
   var extractNumber = function (left, top, widthCorrect, heightCorrect) {
     addressInput.value = (parseInt(left, 10) + widthCorrect) + ', ' + (parseInt(top, 10) + heightCorrect);
-    var extractNumberValue = addressInput.value;
+    var extractNumberValue = Math.round(addressInput.value);
     return extractNumberValue;
   };
 
@@ -69,8 +69,8 @@
       document.removeEventListener('mouseup', onMouseUp);
     };
 
-    document.addEventListener('mousemove', onMouseMove);
     document.addEventListener('mouseup', onMouseUp);
+    document.addEventListener('mousemove', onMouseMove);
   });
 
   // Передает параметры отрисовки пина соответствующим элементам в разметке
