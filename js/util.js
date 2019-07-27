@@ -2,10 +2,13 @@
 
 (function () {
   var ESC_KEYCODE = 27;
+  var PIN_WIDTH = 50;
   var GET_URL = 'https://js.dump.academy/keksobooking/data';
+  var POST_URL = 'https://js.dump.academy/keksobooking';
   var COORDINATE_Y_MIN = 130;
   var COORDINATE_Y_MAX = 630;
-  var PIN_WIDTH = 50;
+  var MAP_PIN_MAIN_START_COORD_X = 570;
+  var MAP_PIN_MAIN_START_COORD_Y = 375;
   var HOUSING_SETTING = {
     'palace': {
       min: 10000,
@@ -31,6 +34,13 @@
   var removeAttrFromFields = function (arrayName, attributeName) {
     for (var i = 0; i < arrayName.length; i++) {
       arrayName[i].removeAttribute(attributeName);
+    }
+  };
+
+  // Добавляет атрибут нескольким элементам одного типа
+  var setAttrFromFields = function (arrayName, attributeName) {
+    for (var i = 0; i < arrayName.length; i++) {
+      arrayName[i].setAttribute(attributeName, true);
     }
   };
 
@@ -82,23 +92,48 @@
     return five;
   };
 
+  // Генерирует из шаблона всплывающее сообщение
+  var popupMessageHandler = function (template) {
+    var popupBlock = template.cloneNode(true);
+    return popupBlock;
+  };
+
+  // Добавляет в разметку отрисованное всплывающее сообщение
+  var pastePopup = function (parent, template, fragment) {
+    fragment.appendChild(popupMessageHandler(template));
+    parent.appendChild(fragment);
+  };
+
+  // Удаляет из разметки и со страницы все найденные дочерние элементы определенного блока
+  var deleteAllElements = function (parent, itemsToDelete) {
+    parent.querySelectorAll(itemsToDelete).forEach(function (item) {
+      parent.removeChild(item);
+    });
+  };
+
   window.mapSettings = {
     PIN_WIDTH: PIN_WIDTH,
     COORDINATE_Y_MIN: COORDINATE_Y_MIN,
     COORDINATE_Y_MAX: COORDINATE_Y_MAX,
+    MAP_PIN_MAIN_START_COORD_X: MAP_PIN_MAIN_START_COORD_X,
+    MAP_PIN_MAIN_START_COORD_Y: MAP_PIN_MAIN_START_COORD_Y,
     mapWidth: mapWidth
   };
 
   window.util = {
     ESC_KEYCODE: ESC_KEYCODE,
     GET_URL: GET_URL,
+    POST_URL: POST_URL,
     HOUSING_SETTING: HOUSING_SETTING,
+    pastePopup: pastePopup,
     isNotEmpty: isNotEmpty,
     getRandom: getRandom,
     getEndingWord: getEndingWord,
     insertTextContent: insertTextContent,
     getGrowingNumber: getGrowingNumber,
     removeAttrFromFields: removeAttrFromFields,
-    setDependentValue: setDependentValue
+    setAttrFromFields: setAttrFromFields,
+    setDependentValue: setDependentValue,
+    deleteAllElements: deleteAllElements
   };
 })();

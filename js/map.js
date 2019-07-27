@@ -36,6 +36,12 @@
     return resultArray.slice(0, MAX_PIN_COUNT);
   };
 
+  // Отрисовывает сообщение об ошибке загрузки данных с сервера
+  var drawingErrorMessage = function (errorMessage) {
+    window.util.pastePopup(mainPage, errorTemplate, fragment);
+    document.querySelector('.error__message').textContent = errorMessage;
+  };
+
   // Переводит главную страницу и ее элементы в активный режим
   var activateMainPage = function () {
     var isMapDisabled = map.classList.contains('map--faded');
@@ -47,7 +53,7 @@
       window.util.removeAttrFromFields(mapFilterSelects, 'disabled');
       window.backend.createSendRequest(function (data) {
         offers = data;
-        window.drawPins();
+        window.pin.drawPins();
         window.drawCards();
         selectedPin();
       }, drawingErrorMessage, window.util.GET_URL, 'GET');
@@ -57,15 +63,9 @@
   // Отображает на странице пины и карточки, в соответствии со значением фильтра по типу жилья,
   // предварительно удаляя результаты предыдущего отображения
   housingTypeFilter.addEventListener('change', function () {
-    var currentPinsArray = mapPins.querySelectorAll('.map__pin:not(.map__pin--main)');
-    var currentCardsArray = map.querySelectorAll('.map__card');
-    currentPinsArray.forEach(function (item) {
-      mapPins.removeChild(item);
-    });
-    currentCardsArray.forEach(function (item) {
-      map.removeChild(item);
-    });
-    window.drawPins();
+    window.util.deleteAllElements(mapPins, '.map__pin:not(.map__pin--main)');
+    window.util.deleteAllElements(map, '.map__card');
+    window.pin.drawPins();
     window.drawCards();
     selectedPin();
   });
@@ -99,23 +99,17 @@
     });
   };
 
-  // Отрисовывает сообщение об ошибке загрузки данных с сервера
-  var errorHandler = function () {
-    var errorBlock = errorTemplate.cloneNode(true);
-    return errorBlock;
-  };
-
-  var drawingErrorMessage = function (errorMessage) {
-    fragment.appendChild(errorHandler());
-    mainPage.appendChild(fragment);
-    document.querySelector('.error__message').textContent = errorMessage;
-  };
-
   window.map = {
     activateMainPage: activateMainPage,
     getFilteredOffers: getFilteredOffers,
     fragment: fragment,
     map: map,
-    mapPins: mapPins
+    mapPins: mapPins,
+    mapFilter: mapFilter,
+    adFormFieldsets: adFormFieldsets,
+    mapFilterFieldsets: mapFilterFieldsets,
+    mapFilterSelects: mapFilterSelects,
+    mainPage: mainPage,
+    drawingErrorMessage: drawingErrorMessage
   };
 })();

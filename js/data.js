@@ -16,5 +16,13 @@
   //   parentEl.querySelector(childEl).textContent = fieldValue;
   // };
 
+  // var getCoords = function (elem) {
+  //   var box = elem.getBoundingClientRect();
+  //
+  //   return {
+  //     top: box.top + pageYOffset,
+  //     left: (box.left + pageXOffset) - 255
+  //   };
+  // };
 
 })();

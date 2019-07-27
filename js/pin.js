@@ -14,14 +14,14 @@
 
   // Извлекает числовое значение из строчного элемента и записывает его в поле ввода адреса
   // (с поправкой на то, что в адрес записываются координаты острого конца)
-  var extractNumber = function (left, top, widthCorrect, heightCorrect) {
+  var extractAndPasteMainPinCoords = function (left, top, widthCorrect, heightCorrect) {
     addressInput.value = (parseInt(left, 10) + widthCorrect) + ', ' + (parseInt(top, 10) + heightCorrect);
-    var extractNumberValue = addressInput.value;
-    return extractNumberValue;
+    var extractAndPasteMainPinCoordsValue = Math.round(addressInput.value);
+    return extractAndPasteMainPinCoordsValue;
   };
 
   // Записывает в поле ввода координаты главной метки до момента активации (красный круг)
-  extractNumber(mapPinMain.style.left, mapPinMain.style.top, 0, 0);
+  extractAndPasteMainPinCoords(mapPinMain.style.left, mapPinMain.style.top, 0, 0);
 
   // Добавляет возможность перемещения метки по карте
   mapPinMain.addEventListener('mousedown', function (evt) {
@@ -63,14 +63,14 @@
       calculateCoordMainPin(upEvt);
 
       // Заполняет поле адреса в соответствии с положением метки на карте
-      extractNumber(mapPinMain.style.left, mapPinMain.style.top, mapPinMainWidth / 2, mapPinMainHeight);
+      extractAndPasteMainPinCoords(mapPinMain.style.left, mapPinMain.style.top, mapPinMainWidth / 2, mapPinMainHeight);
 
       document.removeEventListener('mousemove', onMouseMove);
       document.removeEventListener('mouseup', onMouseUp);
     };
 
-    document.addEventListener('mousemove', onMouseMove);
     document.addEventListener('mouseup', onMouseUp);
+    document.addEventListener('mousemove', onMouseMove);
   });
 
   // Передает параметры отрисовки пина соответствующим элементам в разметке
@@ -96,5 +96,11 @@
     window.map.mapPins.appendChild(window.map.fragment);
   };
 
-  window.drawPins = drawPins;
+  window.pin = {
+    drawPins: drawPins,
+    mapPinMain: mapPinMain,
+    mapPinMainWidth: mapPinMainWidth,
+    mapPinMainHeight: mapPinMainHeight,
+    extractAndPasteMainPinCoords: extractAndPasteMainPinCoords
+  };
 })();
