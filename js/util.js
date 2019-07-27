@@ -104,6 +104,12 @@
     parent.appendChild(fragment);
   };
 
+  // Удаляет из разметки и со страницы все найденные дочерние элементы определенного блока
+  var deleteAllElements = function (parent, itemsToDelete) {
+    parent.querySelectorAll(itemsToDelete).forEach(function (item) {
+      parent.removeChild(item);
+    });
+  };
 
   window.mapSettings = {
     PIN_WIDTH: PIN_WIDTH,
@@ -127,6 +133,7 @@
     getGrowingNumber: getGrowingNumber,
     removeAttrFromFields: removeAttrFromFields,
     setAttrFromFields: setAttrFromFields,
-    setDependentValue: setDependentValue
+    setDependentValue: setDependentValue,
+    deleteAllElements: deleteAllElements
   };
 })();
