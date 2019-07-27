@@ -10,6 +10,7 @@
   var mapFilterFieldsets = mapFilter.querySelectorAll('fieldset');
   var mapFilterSelects = mapFilter.querySelectorAll('select');
   var errorTemplate = document.querySelector('#error').content.querySelector('.error');
+  var successTemplate = document.querySelector('#success').content.querySelector('.success');
   var mapPins = document.querySelector('.map__pins');
   var fragment = document.createDocumentFragment();
   var housingTypeFilter = document.querySelector('#housing-type');
@@ -110,6 +111,45 @@
     mainPage.appendChild(fragment);
     document.querySelector('.error__message').textContent = errorMessage;
   };
+
+  // Отрисовывает сообщение об успешной отправке данных формы
+  var successHandler = function () {
+    var successBlock = successTemplate.cloneNode(true);
+    return successBlock;
+  };
+
+  var drawingSuccessMessage = function () {
+    fragment.appendChild(successHandler());
+    mainPage.appendChild(fragment);
+    // document.querySelector('.success__message').textContent = successMessage;
+  };
+
+
+  /////////////////////
+
+  //   var save = function (data, onLoad, onError) {
+  //   var saveAddress = 'https://js.dump.academy/code-and-magick';
+  //   var request = createRequest(onLoad, onError);
+  //   request.open('POST', saveAddress);
+  //   request.send(data);
+  // };
+
+
+  window.form.adForm.addEventListener('submit', function (evt) {
+    evt.preventDefault();
+    window.backend.createSendRequest(drawingSuccessMessage, drawingErrorMessage, window.util.POST_URL, 'POST', new FormData(window.form.adForm));
+    // window.form.adForm.reset();
+    // map.classList.add('map--faded');
+
+    // window.backend.createSendRequest.open('POST', 'https://js.dump.academy/keksobooking');
+    // window.backend.createSendRequest.send(new FormData(window.form.adForm));
+    // window.backend.createSendRequest.send(new FormData(window.form.adForm));
+    // window.backend.createSendRequest(new FormData(adForm), function () {
+    //   userDialog.classList.add('hidden');
+    // }, window.generateWizards.errorHandler);
+  });
+
+///////////
 
   window.map = {
     activateMainPage: activateMainPage,

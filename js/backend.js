@@ -25,11 +25,35 @@
     document.addEventListener('keydown', onPopupEscPress);
   };
 
+  var addDeleteSuccessModalListeners = function () {
+    var successModal = document.querySelector('.success');
+    if (successModal) {
+      document.addEventListener('mousedown', function (evt) {
+        evt.preventDefault();
+        successModal.remove();
+      });
+
+      var onPopupEscPress = function (evt) {
+        if (evt.keyCode === window.util.ESC_KEYCODE) {
+          successModal.remove();
+        }
+      };
+
+      document.addEventListener('keydown', onPopupEscPress);
+    }
+  };
+
+
   // Загружает информацию о размещенных на карте объявлениях с сервера
-  var createSendRequest = function (onLoad, onError, url, method) {
+  var createSendRequest = function (onLoad, onError, url, method, data) {
     var handleError = function (message) {
       onError(message);
       addDeleteErrorModalListeners();
+    };
+
+    var handleSuccess = function () {
+      onLoad(xhr.response);
+      addDeleteSuccessModalListeners();
     };
 
     var xhr = new XMLHttpRequest();
@@ -37,7 +61,7 @@
 
     xhr.addEventListener('load', function () {
       if (xhr.status === 200) {
-        onLoad(xhr.response);
+        handleSuccess();
       } else {
         handleError('Ошибка загрузки объявления. Статус ответа сервера: ' + xhr.status + ' ' + xhr.statusText);
       }
@@ -52,7 +76,7 @@
     xhr.timeout = 10000; // 10s
 
     xhr.open(method, url);
-    xhr.send();
+    xhr.send(data);
   };
 
   window.backend = {

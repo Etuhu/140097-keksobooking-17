@@ -3,6 +3,7 @@
 (function () {
   var ESC_KEYCODE = 27;
   var GET_URL = 'https://js.dump.academy/keksobooking/data';
+  var POST_URL = 'https://js.dump.academy/keksobooking';
   var COORDINATE_Y_MIN = 130;
   var COORDINATE_Y_MAX = 630;
   var PIN_WIDTH = 50;
@@ -92,6 +93,7 @@
   window.util = {
     ESC_KEYCODE: ESC_KEYCODE,
     GET_URL: GET_URL,
+    POST_URL: POST_URL,
     HOUSING_SETTING: HOUSING_SETTING,
     isNotEmpty: isNotEmpty,
     getRandom: getRandom,
