@@ -48,7 +48,7 @@
       window.util.removeAttrFromFields(mapFilterSelects, 'disabled');
       window.backend.createSendRequest(function (data) {
         offers = data;
-        window.drawPins();
+        window.pin.drawPins();
         window.drawCards();
         selectedPin();
       }, drawingErrorMessage, window.util.GET_URL, 'GET');
@@ -66,7 +66,7 @@
     currentCardsArray.forEach(function (item) {
       map.removeChild(item);
     });
-    window.drawPins();
+    window.pin.drawPins();
     window.drawCards();
     selectedPin();
   });
@@ -112,6 +112,9 @@
     document.querySelector('.error__message').textContent = errorMessage;
   };
 
+
+  /////////////////////ОТПРАВКА ФОРМЫ
+
   // Отрисовывает сообщение об успешной отправке данных формы
   var successHandler = function () {
     var successBlock = successTemplate.cloneNode(true);
@@ -121,35 +124,37 @@
   var drawingSuccessMessage = function () {
     fragment.appendChild(successHandler());
     mainPage.appendChild(fragment);
-    // document.querySelector('.success__message').textContent = successMessage;
   };
-
-
-  /////////////////////
-
-  //   var save = function (data, onLoad, onError) {
-  //   var saveAddress = 'https://js.dump.academy/code-and-magick';
-  //   var request = createRequest(onLoad, onError);
-  //   request.open('POST', saveAddress);
-  //   request.send(data);
-  // };
-
 
   window.form.adForm.addEventListener('submit', function (evt) {
     evt.preventDefault();
-    window.backend.createSendRequest(drawingSuccessMessage, drawingErrorMessage, window.util.POST_URL, 'POST', new FormData(window.form.adForm));
-    // window.form.adForm.reset();
-    // map.classList.add('map--faded');
 
-    // window.backend.createSendRequest.open('POST', 'https://js.dump.academy/keksobooking');
-    // window.backend.createSendRequest.send(new FormData(window.form.adForm));
-    // window.backend.createSendRequest.send(new FormData(window.form.adForm));
-    // window.backend.createSendRequest(new FormData(adForm), function () {
-    //   userDialog.classList.add('hidden');
-    // }, window.generateWizards.errorHandler);
+    window.backend.createSendRequest(drawingSuccessMessage, drawingErrorMessage, window.util.POST_URL, 'POST', new FormData(window.form.adForm));
+
+    mapFilter.reset();
+    window.form.adForm.reset();
+
+    var currentPinsArray = mapPins.querySelectorAll('.map__pin:not(.map__pin--main)');
+    var currentCardsArray = map.querySelectorAll('.map__card');
+    currentPinsArray.forEach(function (item) {
+      mapPins.removeChild(item);
+    });
+    currentCardsArray.forEach(function (item) {
+      map.removeChild(item);
+    });
+
+    window.util.setAttrFromFields(adFormFieldsets, 'disabled');
+    window.util.setAttrFromFields(mapFilterFieldsets, 'disabled');
+    window.util.setAttrFromFields(mapFilterSelects, 'disabled');
+    window.form.adForm.classList.add('ad-form--disabled');
+    map.classList.add('map--faded');
+
+    window.pin.mapPinMain.style.left = window.mapSettings.MAP_PIN_MAIN_START_COORD_X + 'px';
+    window.pin.mapPinMain.style.top = window.mapSettings.MAP_PIN_MAIN_START_COORD_Y + 'px';
+    window.pin.extractNumber(window.pin.mapPinMain.style.left, window.pin.mapPinMain.style.top, 0, 0);
   });
 
-///////////
+  /////////////////////ОТПРАВКА ФОРМЫ
 
   window.map = {
     activateMainPage: activateMainPage,

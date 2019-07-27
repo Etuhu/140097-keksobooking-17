@@ -6,13 +6,11 @@
     var errorModal = document.querySelector('.error');
     var errorButton = document.querySelector('.error__button');
 
-    errorButton.addEventListener('click', function (evt) {
-      evt.preventDefault();
+    errorButton.addEventListener('click', function () {
       errorModal.remove();
     });
 
-    document.addEventListener('mousedown', function (evt) {
-      evt.preventDefault();
+    document.addEventListener('mousedown', function () {
       errorModal.remove();
     });
 
@@ -28,8 +26,7 @@
   var addDeleteSuccessModalListeners = function () {
     var successModal = document.querySelector('.success');
     if (successModal) {
-      document.addEventListener('mousedown', function (evt) {
-        evt.preventDefault();
+      document.addEventListener('mousedown', function () {
         successModal.remove();
       });
 
