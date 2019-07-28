@@ -16,6 +16,8 @@
   var housingRoomsFilter = document.querySelector('#housing-rooms');
   var housingGuestsFilter = document.querySelector('#housing-guests');
   var housingPriceFilter = document.querySelector('#housing-price');
+  var housingFeaturesFilter = document.querySelector('#housing-features');
+
   var housingPriceValue = {
     '100': 'low',
     '5000': 'low',
@@ -43,13 +45,15 @@
 
   // Осуществляет фильтрацию массива объявлений в зависимости от выбарнного типа жилья
   var getFilteredOffers = function () {
-    var filterValue = housingTypeFilter.value;
+    var filterTypeValue = housingTypeFilter.value;
     var filterRoomsValue = housingRoomsFilter.value;
     var filterGuestsValue = housingGuestsFilter.value;
+    // var filterFeaturesValues = featureItems[1].hasAttribute('checked');
+    // console.log(filterFeaturesValues);
     // var housingPriceValue = housingPriceFilter.value;
 
-    var resultArray =
-      filterValue === 'any' ?
+    var resultTypeArray =
+      filterTypeValue === 'any' ?
         offers :
         offers.filter(function (offering) {
           return offering.offer.type === housingTypeFilter.value;
@@ -70,7 +74,7 @@
         });
 
     // var resultPriceArray =
-    //   filterValue === 'any' ?
+    //   filterTypeValue === 'any' ?
     //     offers :
     //     offers.filter(function (offering) {
     //       if (housingPriceFilter.value === 'low') {
@@ -85,24 +89,29 @@
     //     });
 
     var resultPriceArray =
-      filterValue === 'any' ?
+      housingPriceFilter === 'any' ?
         offers :
         offers.filter(function (offering) {
           return housingPriceValue[offering.offer.price] === housingPriceFilter.value;
         });
 
+    var resultFeaturesArray =
+      housingFeaturesFilter.querySelector('.map__checkbox:checked').value === 'null' ?
+        offers :
+        offers.filter(function (offering) {
+          return offering.offer.features.indexOf(housingFeaturesFilter.querySelector('.map__checkbox:checked').value) >= 0;
+        });
 
-    // return resultArray.slice(0, MAX_PIN_COUNT);
-    // return resultRoomsArray.slice(0, MAX_PIN_COUNT);
-    // return resultArray.concat(resultRoomsArray).slice(0, MAX_PIN_COUNT);
-    resultArray.concat(resultRoomsArray).concat(resultGuestsArray).concat(resultPriceArray).slice(0, MAX_PIN_COUNT);
+    resultTypeArray.concat(resultRoomsArray).concat(resultGuestsArray).concat(resultPriceArray).concat(resultFeaturesArray).slice(0, MAX_PIN_COUNT);
 
-    var sameTypeAndRoomsOffers = resultArray.filter(function (it) {
+    var sameTypeAndRoomsOffers = resultTypeArray.filter(function (it) {
       return (it.offer.type === housingTypeFilter.value || housingTypeFilter.value === 'any')
       && (parseInt(it.offer.rooms, 10) === parseInt(housingRoomsFilter.value, 10) || housingRoomsFilter.value === 'any')
       && (parseInt(it.offer.guests, 10) === parseInt(housingGuestsFilter.value, 10) || housingGuestsFilter.value === 'any')
-      && (housingPriceValue[it.offer.price] === housingPriceFilter.value || housingPriceFilter.value === 'any');
+      && (housingPriceValue[it.offer.price] === housingPriceFilter.value || housingPriceFilter.value === 'any')
+      && it.offer.features.indexOf(housingFeaturesFilter.querySelector('.map__checkbox:checked').value) >= 0;
     });
+
     return sameTypeAndRoomsOffers;
 
   };
@@ -171,6 +180,103 @@
     selectedPin();
   });
 
+  // Отображает на странице пины и карточки, в соответствии со значением фильтра по особенностям (wifi),
+  // предварительно удаляя результаты предыдущего отображения
+  document.querySelector('#filter-wifi').addEventListener('click', function () {
+    if (document.querySelector('#filter-wifi').checked === true) {
+      document.querySelector('#filter-wifi').setAttribute('checked', true);
+    } else if (document.querySelector('#filter-wifi').checked === false) {
+      document.querySelector('#filter-wifi').setAttribute('checked', false);
+    }
+
+    window.util.deleteAllElements(mapPins, '.map__pin:not(.map__pin--main)');
+    window.util.deleteAllElements(map, '.map__card');
+    window.pin.drawPins();
+    window.drawCards();
+    selectedPin();
+  });
+
+  // Отображает на странице пины и карточки, в соответствии со значением фильтра по особенностям (dishwasher),
+  // предварительно удаляя результаты предыдущего отображения
+  document.querySelector('#filter-dishwasher').addEventListener('click', function () {
+    if (document.querySelector('#filter-dishwasher').checked === true) {
+      document.querySelector('#filter-dishwasher').setAttribute('checked', true);
+    } else if (document.querySelector('#filter-dishwasher').checked === false) {
+      document.querySelector('#filter-dishwasher').setAttribute('checked', false);
+    }
+
+    window.util.deleteAllElements(mapPins, '.map__pin:not(.map__pin--main)');
+    window.util.deleteAllElements(map, '.map__card');
+    window.pin.drawPins();
+    window.drawCards();
+    selectedPin();
+  });
+
+  // Отображает на странице пины и карточки, в соответствии со значением фильтра по особенностям (parking),
+  // предварительно удаляя результаты предыдущего отображения
+  document.querySelector('#filter-parking').addEventListener('click', function () {
+    if (document.querySelector('#filter-parking').checked === true) {
+      document.querySelector('#filter-parking').setAttribute('checked', true);
+    } else if (document.querySelector('#filter-parking').checked === false) {
+      document.querySelector('#filter-parking').setAttribute('checked', false);
+    }
+
+    window.util.deleteAllElements(mapPins, '.map__pin:not(.map__pin--main)');
+    window.util.deleteAllElements(map, '.map__card');
+    window.pin.drawPins();
+    window.drawCards();
+    selectedPin();
+  });
+
+  // Отображает на странице пины и карточки, в соответствии со значением фильтра по особенностям (washer),
+  // предварительно удаляя результаты предыдущего отображения
+  document.querySelector('#filter-washer').addEventListener('click', function () {
+    if (document.querySelector('#filter-washer').checked === true) {
+      document.querySelector('#filter-washer').setAttribute('checked', true);
+    } else if (document.querySelector('#filter-washer').checked === false) {
+      document.querySelector('#filter-washer').setAttribute('checked', false);
+    }
+
+    window.util.deleteAllElements(mapPins, '.map__pin:not(.map__pin--main)');
+    window.util.deleteAllElements(map, '.map__card');
+    window.pin.drawPins();
+    window.drawCards();
+    selectedPin();
+  });
+
+  // Отображает на странице пины и карточки, в соответствии со значением фильтра по особенностям (elevator),
+  // предварительно удаляя результаты предыдущего отображения
+  document.querySelector('#filter-elevator').addEventListener('click', function () {
+    if (document.querySelector('#filter-elevator').checked === true) {
+      document.querySelector('#filter-elevator').setAttribute('checked', true);
+    } else if (document.querySelector('#filter-elevator').checked === false) {
+      document.querySelector('#filter-elevator').setAttribute('checked', false);
+    }
+
+    window.util.deleteAllElements(mapPins, '.map__pin:not(.map__pin--main)');
+    window.util.deleteAllElements(map, '.map__card');
+    window.pin.drawPins();
+    window.drawCards();
+    selectedPin();
+  });
+
+  // Отображает на странице пины и карточки, в соответствии со значением фильтра по особенностям (conditioner),
+  // предварительно удаляя результаты предыдущего отображения
+  document.querySelector('#filter-conditioner').addEventListener('click', function () {
+    if (document.querySelector('#filter-conditioner').checked === true) {
+      document.querySelector('#filter-conditioner').setAttribute('checked', true);
+    } else if (document.querySelector('#filter-conditioner').checked === false) {
+      document.querySelector('#filter-conditioner').setAttribute('checked', false);
+    }
+
+    window.util.deleteAllElements(mapPins, '.map__pin:not(.map__pin--main)');
+    window.util.deleteAllElements(map, '.map__card');
+    window.pin.drawPins();
+    window.drawCards();
+    selectedPin();
+  });
+
+
   // Управляет отображением на карте активных пинов и соответствующих им карточек объявлений
   var selectedPin = function () {
     var mapPinsArray = mapPins.querySelectorAll('.map__pin:not(.map__pin--main)');
@@ -190,6 +296,7 @@
 
       mapCardsArray[i].querySelector('.popup__close').addEventListener('click', function () {
         mapCardsArray[i].hidden = true;
+        mapPinsArray[i].classList.remove('map__pin--active');
       });
       document.addEventListener('keydown', function (evt) {
         if (evt.keyCode === window.util.ESC_KEYCODE) {
