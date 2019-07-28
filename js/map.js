@@ -14,11 +14,40 @@
   var fragment = document.createDocumentFragment();
   var housingTypeFilter = document.querySelector('#housing-type');
   var housingRoomsFilter = document.querySelector('#housing-rooms');
+  var housingGuestsFilter = document.querySelector('#housing-guests');
+  var housingPriceFilter = document.querySelector('#housing-price');
+  var housingPriceValue = {
+    '100': 'low',
+    '5000': 'low',
+    '9000': 'low',
+    '10000': 'low',
+    '30000': 'middle',
+    '42000': 'middle',
+    '50000': 'middle',
+    '60000': 'high',
+    '90000': 'high',
+    '6000000': 'high'
+  };
+
+  // offering.offer.price = [100, 5000, 9000, 10000, 30000, 42000, 50000, 60000, 90000, 6000000]
+
+  // for (key in housingPriceValue) {
+  //   if (offering.offer.price[i] < 10000) {
+  //     housingPriceValue[key] = 'low'
+  //   } else if (offering.offer.price[i] >= 10000 && offering.offer.price[i] < 50000) {
+  //     housingPriceValue[key] = 'middle'
+  //   } else if (offering.offer.price[i] >= 50000) {
+  //     housingPriceValue[key] = 'high'
+  //   }
+
 
   // Осуществляет фильтрацию массива объявлений в зависимости от выбарнного типа жилья
   var getFilteredOffers = function () {
     var filterValue = housingTypeFilter.value;
     var filterRoomsValue = housingRoomsFilter.value;
+    var filterGuestsValue = housingGuestsFilter.value;
+    // var housingPriceValue = housingPriceFilter.value;
+
     var resultArray =
       filterValue === 'any' ?
         offers :
@@ -32,12 +61,47 @@
         offers.filter(function (offering) {
           return parseInt(offering.offer.rooms, 10) === parseInt(housingRoomsFilter.value, 10);
         });
+
+    var resultGuestsArray =
+      filterGuestsValue === 'any' ?
+        offers :
+        offers.filter(function (offering) {
+          return parseInt(offering.offer.guests, 10) === parseInt(housingGuestsFilter.value, 10);
+        });
+
+    // var resultPriceArray =
+    //   filterValue === 'any' ?
+    //     offers :
+    //     offers.filter(function (offering) {
+    //       if (housingPriceFilter.value === 'low') {
+    //         return offering.offer.price < 10000;
+    //       } else if (housingPriceFilter.value === 'middle') {
+    //         return offering.offer.price >= 10000 && offering.offer.price < 50000;
+    //       } else if (housingPriceFilter.value === 'high') {
+    //         return offering.offer.price >= 50000;
+    //       } else {
+    //         return offering.offer.price >= 0;
+    //       }
+    //     });
+
+    var resultPriceArray =
+      filterValue === 'any' ?
+        offers :
+        offers.filter(function (offering) {
+          return housingPriceValue[offering.offer.price] === housingPriceFilter.value;
+        });
+
+
     // return resultArray.slice(0, MAX_PIN_COUNT);
     // return resultRoomsArray.slice(0, MAX_PIN_COUNT);
     // return resultArray.concat(resultRoomsArray).slice(0, MAX_PIN_COUNT);
-    resultArray.concat(resultRoomsArray).slice(0, MAX_PIN_COUNT);
+    resultArray.concat(resultRoomsArray).concat(resultGuestsArray).concat(resultPriceArray).slice(0, MAX_PIN_COUNT);
+
     var sameTypeAndRoomsOffers = resultArray.filter(function (it) {
-      return it.offer.type === housingTypeFilter.value && parseInt(it.offer.rooms, 10) === parseInt(housingRoomsFilter.value, 10);
+      return (it.offer.type === housingTypeFilter.value || housingTypeFilter.value === 'any')
+      && (parseInt(it.offer.rooms, 10) === parseInt(housingRoomsFilter.value, 10) || housingRoomsFilter.value === 'any')
+      && (parseInt(it.offer.guests, 10) === parseInt(housingGuestsFilter.value, 10) || housingGuestsFilter.value === 'any')
+      && (housingPriceValue[it.offer.price] === housingPriceFilter.value || housingPriceFilter.value === 'any');
     });
     return sameTypeAndRoomsOffers;
 
@@ -87,6 +151,25 @@
     selectedPin();
   });
 
+  // Отображает на странице пины и карточки, в соответствии со значением фильтра по количеству гостей,
+  // предварительно удаляя результаты предыдущего отображения
+  housingGuestsFilter.addEventListener('change', function () {
+    window.util.deleteAllElements(mapPins, '.map__pin:not(.map__pin--main)');
+    window.util.deleteAllElements(map, '.map__card');
+    window.pin.drawPins();
+    window.drawCards();
+    selectedPin();
+  });
+
+  // Отображает на странице пины и карточки, в соответствии со значением фильтра по стоимости,
+  // предварительно удаляя результаты предыдущего отображения
+  housingPriceFilter.addEventListener('change', function () {
+    window.util.deleteAllElements(mapPins, '.map__pin:not(.map__pin--main)');
+    window.util.deleteAllElements(map, '.map__card');
+    window.pin.drawPins();
+    window.drawCards();
+    selectedPin();
+  });
 
   // Управляет отображением на карте активных пинов и соответствующих им карточек объявлений
   var selectedPin = function () {
