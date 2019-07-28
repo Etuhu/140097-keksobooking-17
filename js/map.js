@@ -13,12 +13,12 @@
   var mapPins = document.querySelector('.map__pins');
   var fragment = document.createDocumentFragment();
   var housingTypeFilter = document.querySelector('#housing-type');
-  // var housingRoomsFilter = document.querySelector('#housing-rooms');
+  var housingRoomsFilter = document.querySelector('#housing-rooms');
 
   // Осуществляет фильтрацию массива объявлений в зависимости от выбарнного типа жилья
   var getFilteredOffers = function () {
     var filterValue = housingTypeFilter.value;
-    // var filterRoomsValue = housingRoomsFilter.value;
+    var filterRoomsValue = housingRoomsFilter.value;
     var resultArray =
       filterValue === 'any' ?
         offers :
@@ -26,14 +26,21 @@
           return offering.offer.type === housingTypeFilter.value;
         });
 
-    // var resultRoomsArray =
-    //   filterRoomsValue === 'any' ?
-    //     offers :
-    //     offers.filter(function (offering) {
-    //       return offering.offer.rooms === housingRoomsFilter.value;
-    //     });
-    // return resultArray.concat(resultRoomsArray);
-    return resultArray.slice(0, MAX_PIN_COUNT);
+    var resultRoomsArray =
+      filterRoomsValue === 'any' ?
+        offers :
+        offers.filter(function (offering) {
+          return parseInt(offering.offer.rooms, 10) === parseInt(housingRoomsFilter.value, 10);
+        });
+    // return resultArray.slice(0, MAX_PIN_COUNT);
+    // return resultRoomsArray.slice(0, MAX_PIN_COUNT);
+    // return resultArray.concat(resultRoomsArray).slice(0, MAX_PIN_COUNT);
+    resultArray.concat(resultRoomsArray).slice(0, MAX_PIN_COUNT);
+    var sameTypeAndRoomsOffers = resultArray.filter(function (it) {
+      return it.offer.type === housingTypeFilter.value && parseInt(it.offer.rooms, 10) === parseInt(housingRoomsFilter.value, 10);
+    });
+    return sameTypeAndRoomsOffers;
+
   };
 
   // Отрисовывает сообщение об ошибке загрузки данных с сервера
@@ -69,6 +76,17 @@
     window.drawCards();
     selectedPin();
   });
+
+  // Отображает на странице пины и карточки, в соответствии со значением фильтра по количеству комнат,
+  // предварительно удаляя результаты предыдущего отображения
+  housingRoomsFilter.addEventListener('change', function () {
+    window.util.deleteAllElements(mapPins, '.map__pin:not(.map__pin--main)');
+    window.util.deleteAllElements(map, '.map__card');
+    window.pin.drawPins();
+    window.drawCards();
+    selectedPin();
+  });
+
 
   // Управляет отображением на карте активных пинов и соответствующих им карточек объявлений
   var selectedPin = function () {
