@@ -28,7 +28,6 @@
     }
   };
 
-
   var deleteDebounce = function (cb) {
     var DEBOUNCE_INTERVAL = 500;
     var lastTimeout = null;
@@ -50,15 +49,6 @@
     for (var i = 0; i < arrayName.length; i++) {
       arrayName[i].setAttribute(attributeName, true);
     }
-  };
-
-  // Функция, выводящая числа от 0 до max в порядке возрастания
-  var getGrowingNumber = function (max) {
-    var sum = 0;
-    for (var i = 1; i <= max; i++) {
-      sum += 1;
-    }
-    return sum;
   };
 
   // Устанавливает зависимость между временем заезда и выезда
@@ -129,7 +119,6 @@
     isNotEmpty: isNotEmpty,
     getEndingWord: getEndingWord,
     insertTextContent: insertTextContent,
-    getGrowingNumber: getGrowingNumber,
     removeAttributeFromFields: removeAttributeFromFields,
     setAttributeFromFields: setAttributeFromFields,
     setDependentValue: setDependentValue,

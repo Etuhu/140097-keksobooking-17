@@ -42,7 +42,7 @@
   });
 
   // Осуществляет валидацию полей по количеству комнат и количеству мест
-  var numberOfRoomValidation = function () {
+  var numberOfRoomValidate = function () {
     var roomNumberSelectValue = parseInt(roomNumberSelect.value, 10);
     var capacitySelectValue = parseInt(capacitySelect.value, 10);
 
@@ -62,11 +62,11 @@
   };
 
   roomNumberSelect.addEventListener('change', function () {
-    numberOfRoomValidation();
+    numberOfRoomValidate();
   });
 
   capacitySelect.addEventListener('change', function () {
-    numberOfRoomValidation();
+    numberOfRoomValidate();
   });
 
   // Осуществляет сброс полей формы и возврат страницы к неактивному состоянию
@@ -90,14 +90,14 @@
   };
 
   // Отрисовывает сообщение об успешной отправке данных формы
-  var drawingSuccessMessage = function () {
+  var drawSuccessMessage = function () {
     window.util.pastePopup(window.map.mainPage, successTemplate, window.map.fragment);
   };
 
   // Осуществляет отправку данных формы и сброс полей формы с возвратом страницы к неактивному состоянию
   adForm.addEventListener('submit', function (evt) {
     evt.preventDefault();
-    window.createSendRequest(drawingSuccessMessage, window.map.drawingErrorMessage, window.util.POST_URL, 'POST', new FormData(adForm));
+    window.createSendRequest(drawSuccessMessage, window.map.drawErrorMessage, window.util.POST_URL, 'POST', new FormData(adForm));
     resetFormAndDeactivatePage();
   });
 

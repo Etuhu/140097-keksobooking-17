@@ -116,7 +116,7 @@
   });
 
   // Отрисовывает сообщение об ошибке загрузки данных с сервера
-  var drawingErrorMessage = function (errorMessage) {
+  var drawErrorMessage = function (errorMessage) {
     window.util.pastePopup(mainPage, errorTemplate, fragment);
     document.querySelector('.error__message').textContent = errorMessage;
   };
@@ -135,7 +135,7 @@
         window.pin.drawPoints();
         window.drawCards();
         showActivePinsAndCards();
-      }, drawingErrorMessage, window.util.GET_URL, 'GET');
+      }, drawErrorMessage, window.util.GET_URL, 'GET');
     }
   };
 
@@ -150,6 +150,6 @@
     filterFieldsets: mapFilterFieldsets,
     filterSelects: mapFilterSelects,
     mainPage: mainPage,
-    drawingErrorMessage: drawingErrorMessage
+    drawErrorMessage: drawErrorMessage
   };
 })();

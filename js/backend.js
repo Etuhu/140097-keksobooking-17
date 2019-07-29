@@ -6,21 +6,23 @@
     var errorModal = document.querySelector('.error');
     var errorButton = document.querySelector('.error__button');
 
-    errorButton.addEventListener('click', function () {
-      errorModal.remove();
-    });
-
-    document.addEventListener('mousedown', function () {
-      errorModal.remove();
-    });
-
-    var onPopupEscPress = function (evt) {
-      if (evt.keyCode === window.util.ESC_KEYCODE) {
+    if (errorModal) {
+      errorButton.addEventListener('click', function () {
         errorModal.remove();
-      }
-    };
+      });
 
-    document.addEventListener('keydown', onPopupEscPress);
+      document.addEventListener('mousedown', function () {
+        errorModal.remove();
+      });
+
+      var onPopupEscPress = function (evt) {
+        if (evt.keyCode === window.util.ESC_KEYCODE) {
+          errorModal.remove();
+        }
+      };
+
+      document.addEventListener('keydown', onPopupEscPress);
+    }
   };
 
   var addDeleteSuccessModalListeners = function () {
