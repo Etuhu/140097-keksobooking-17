@@ -95,21 +95,67 @@
           return housingPriceValue[offering.offer.price] === housingPriceFilter.value;
         });
 
-    var resultFeaturesArray =
-      housingFeaturesFilter.querySelector('.map__checkbox:checked').value === 'null' ?
+    var resultFeaturesWifiArray =
+      housingFeaturesFilter.querySelector('#filter-wifi').checked === false ?
         offers :
         offers.filter(function (offering) {
-          return offering.offer.features.indexOf(housingFeaturesFilter.querySelector('.map__checkbox:checked').value) >= 0;
+          return offering.offer.features.indexOf(housingFeaturesFilter.querySelector('#filter-wifi:checked').value) >= 0;
         });
 
-    resultTypeArray.concat(resultRoomsArray).concat(resultGuestsArray).concat(resultPriceArray).concat(resultFeaturesArray).slice(0, MAX_PIN_COUNT);
+    var resultFeaturesDishwasherArray =
+      housingFeaturesFilter.querySelector('#filter-dishwasher').hasAttribute('checked') === false ?
+        offers :
+        offers.filter(function (offering) {
+          return offering.offer.features.indexOf(housingFeaturesFilter.querySelector('#filter-dishwasher:checked').value) >= 0;
+        });
+
+    var resultFeaturesParkingArray =
+      housingFeaturesFilter.querySelector('#filter-parking').hasAttribute('checked') === false ?
+        offers :
+        offers.filter(function (offering) {
+          return offering.offer.features.indexOf(housingFeaturesFilter.querySelector('#filter-parking:checked').value) >= 0;
+        });
+
+    var resultFeaturesWasherArray =
+      housingFeaturesFilter.querySelector('#filter-washer').hasAttribute('checked') === false ?
+        offers :
+        offers.filter(function (offering) {
+          return offering.offer.features.indexOf(housingFeaturesFilter.querySelector('#filter-washer:checked').value) >= 0;
+        });
+
+    var resultFeaturesElevatorArray =
+      housingFeaturesFilter.querySelector('#filter-elevator').hasAttribute('checked') === false ?
+        offers :
+        offers.filter(function (offering) {
+          return offering.offer.features.indexOf(housingFeaturesFilter.querySelector('#filter-elevator:checked').value) >= 0;
+        });
+
+    var resultFeaturesConditionerArray =
+      housingFeaturesFilter.querySelector('#filter-conditioner').hasAttribute('checked') === false ?
+        offers :
+        offers.filter(function (offering) {
+          return offering.offer.features.indexOf(housingFeaturesFilter.querySelector('#filter-conditioner:checked').value) >= 0;
+        });
+
+    resultTypeArray.concat(resultRoomsArray).concat(resultGuestsArray).concat(resultPriceArray).concat(resultFeaturesWifiArray).concat(resultFeaturesDishwasherArray).concat(resultFeaturesParkingArray).concat(resultFeaturesWasherArray).concat(resultFeaturesElevatorArray).concat(resultFeaturesConditionerArray).slice(0, MAX_PIN_COUNT);
 
     var sameTypeAndRoomsOffers = resultTypeArray.filter(function (it) {
       return (it.offer.type === housingTypeFilter.value || housingTypeFilter.value === 'any')
       && (parseInt(it.offer.rooms, 10) === parseInt(housingRoomsFilter.value, 10) || housingRoomsFilter.value === 'any')
       && (parseInt(it.offer.guests, 10) === parseInt(housingGuestsFilter.value, 10) || housingGuestsFilter.value === 'any')
       && (housingPriceValue[it.offer.price] === housingPriceFilter.value || housingPriceFilter.value === 'any')
-      && it.offer.features.indexOf(housingFeaturesFilter.querySelector('.map__checkbox:checked').value) >= 0;
+      && (it.offer.features.indexOf(housingFeaturesFilter.querySelector('#filter-wifi').value) >= 0
+      || housingFeaturesFilter.querySelector('#filter-wifi').checked === false)
+      && (it.offer.features.indexOf(housingFeaturesFilter.querySelector('#filter-dishwasher').value) >= 0
+      || housingFeaturesFilter.querySelector('#filter-dishwasher').checked === false)
+      && (it.offer.features.indexOf(housingFeaturesFilter.querySelector('#filter-parking').value) >= 0
+      || housingFeaturesFilter.querySelector('#filter-parking').checked === false)
+      && (it.offer.features.indexOf(housingFeaturesFilter.querySelector('#filter-washer').value) >= 0
+      || housingFeaturesFilter.querySelector('#filter-washer').checked === false)
+      && (it.offer.features.indexOf(housingFeaturesFilter.querySelector('#filter-elevator').value) >= 0
+      || housingFeaturesFilter.querySelector('#filter-elevator').checked === false)
+      && (it.offer.features.indexOf(housingFeaturesFilter.querySelector('#filter-conditioner').value) >= 0
+      || housingFeaturesFilter.querySelector('#filter-conditioner').checked === false);
     });
 
     return sameTypeAndRoomsOffers;
@@ -182,13 +228,12 @@
 
   // Отображает на странице пины и карточки, в соответствии со значением фильтра по особенностям (wifi),
   // предварительно удаляя результаты предыдущего отображения
-  document.querySelector('#filter-wifi').addEventListener('click', function () {
-    if (document.querySelector('#filter-wifi').checked === true) {
-      document.querySelector('#filter-wifi').setAttribute('checked', true);
-    } else if (document.querySelector('#filter-wifi').checked === false) {
-      document.querySelector('#filter-wifi').setAttribute('checked', false);
-    }
-
+  document.querySelector('#filter-wifi').addEventListener('change', function () {
+    // if (document.querySelector('#filter-wifi').checked === true) {
+    //   document.querySelector('#filter-wifi').setAttribute('checked', true);
+    // } else if (document.querySelector('#filter-wifi').checked === false) {
+    //   document.querySelector('#filter-wifi').setAttribute('checked', false);
+    // }
     window.util.deleteAllElements(mapPins, '.map__pin:not(.map__pin--main)');
     window.util.deleteAllElements(map, '.map__card');
     window.pin.drawPins();
@@ -199,11 +244,11 @@
   // Отображает на странице пины и карточки, в соответствии со значением фильтра по особенностям (dishwasher),
   // предварительно удаляя результаты предыдущего отображения
   document.querySelector('#filter-dishwasher').addEventListener('click', function () {
-    if (document.querySelector('#filter-dishwasher').checked === true) {
-      document.querySelector('#filter-dishwasher').setAttribute('checked', true);
-    } else if (document.querySelector('#filter-dishwasher').checked === false) {
-      document.querySelector('#filter-dishwasher').setAttribute('checked', false);
-    }
+    // if (document.querySelector('#filter-dishwasher').checked === true) {
+    //   document.querySelector('#filter-dishwasher').setAttribute('checked', true);
+    // } else if (document.querySelector('#filter-dishwasher').checked === false) {
+    //   document.querySelector('#filter-dishwasher').setAttribute('checked', false);
+    // }
 
     window.util.deleteAllElements(mapPins, '.map__pin:not(.map__pin--main)');
     window.util.deleteAllElements(map, '.map__card');
@@ -215,11 +260,11 @@
   // Отображает на странице пины и карточки, в соответствии со значением фильтра по особенностям (parking),
   // предварительно удаляя результаты предыдущего отображения
   document.querySelector('#filter-parking').addEventListener('click', function () {
-    if (document.querySelector('#filter-parking').checked === true) {
-      document.querySelector('#filter-parking').setAttribute('checked', true);
-    } else if (document.querySelector('#filter-parking').checked === false) {
-      document.querySelector('#filter-parking').setAttribute('checked', false);
-    }
+    // if (document.querySelector('#filter-parking').checked === true) {
+    //   document.querySelector('#filter-parking').setAttribute('checked', true);
+    // } else if (document.querySelector('#filter-parking').checked === false) {
+    //   document.querySelector('#filter-parking').setAttribute('checked', false);
+    // }
 
     window.util.deleteAllElements(mapPins, '.map__pin:not(.map__pin--main)');
     window.util.deleteAllElements(map, '.map__card');
@@ -228,14 +273,14 @@
     selectedPin();
   });
 
-  // Отображает на странице пины и карточки, в соответствии со значением фильтра по особенностям (washer),
-  // предварительно удаляя результаты предыдущего отображения
+  // // Отображает на странице пины и карточки, в соответствии со значением фильтра по особенностям (washer),
+  // // предварительно удаляя результаты предыдущего отображения
   document.querySelector('#filter-washer').addEventListener('click', function () {
-    if (document.querySelector('#filter-washer').checked === true) {
-      document.querySelector('#filter-washer').setAttribute('checked', true);
-    } else if (document.querySelector('#filter-washer').checked === false) {
-      document.querySelector('#filter-washer').setAttribute('checked', false);
-    }
+  //   // if (document.querySelector('#filter-washer').checked === true) {
+  //   //   document.querySelector('#filter-washer').setAttribute('checked', true);
+  //   // } else if (document.querySelector('#filter-washer').checked === false) {
+  //   //   document.querySelector('#filter-washer').setAttribute('checked', false);
+  //   // }
 
     window.util.deleteAllElements(mapPins, '.map__pin:not(.map__pin--main)');
     window.util.deleteAllElements(map, '.map__card');
@@ -247,11 +292,11 @@
   // Отображает на странице пины и карточки, в соответствии со значением фильтра по особенностям (elevator),
   // предварительно удаляя результаты предыдущего отображения
   document.querySelector('#filter-elevator').addEventListener('click', function () {
-    if (document.querySelector('#filter-elevator').checked === true) {
-      document.querySelector('#filter-elevator').setAttribute('checked', true);
-    } else if (document.querySelector('#filter-elevator').checked === false) {
-      document.querySelector('#filter-elevator').setAttribute('checked', false);
-    }
+    // if (document.querySelector('#filter-elevator').checked === true) {
+    //   document.querySelector('#filter-elevator').setAttribute('checked', true);
+    // } else if (document.querySelector('#filter-elevator').checked === false) {
+    //   document.querySelector('#filter-elevator').setAttribute('checked', false);
+    // }
 
     window.util.deleteAllElements(mapPins, '.map__pin:not(.map__pin--main)');
     window.util.deleteAllElements(map, '.map__card');
@@ -263,11 +308,11 @@
   // Отображает на странице пины и карточки, в соответствии со значением фильтра по особенностям (conditioner),
   // предварительно удаляя результаты предыдущего отображения
   document.querySelector('#filter-conditioner').addEventListener('click', function () {
-    if (document.querySelector('#filter-conditioner').checked === true) {
-      document.querySelector('#filter-conditioner').setAttribute('checked', true);
-    } else if (document.querySelector('#filter-conditioner').checked === false) {
-      document.querySelector('#filter-conditioner').setAttribute('checked', false);
-    }
+    // if (document.querySelector('#filter-conditioner').checked === true) {
+    //   document.querySelector('#filter-conditioner').setAttribute('checked', true);
+    // } else if (document.querySelector('#filter-conditioner').checked === false) {
+    //   document.querySelector('#filter-conditioner').setAttribute('checked', false);
+    // }
 
     window.util.deleteAllElements(mapPins, '.map__pin:not(.map__pin--main)');
     window.util.deleteAllElements(map, '.map__card');
