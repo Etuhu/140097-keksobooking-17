@@ -71,21 +71,21 @@
 
   // Осуществляет сброс полей формы и возврат страницы к неактивному состоянию
   var resetFormAndDeactivatePage = function () {
-    window.map.filters.reset();
+    window.map.filter.reset();
     adForm.reset();
 
-    window.util.deleteAllElements(window.map.pins, '.map__pin:not(.map__pin--main)');
+    window.util.deleteAllElements(window.map.pinsBlock, '.map__pin:not(.map__pin--main)');
     window.util.deleteAllElements(window.map.cityView, '.map__card');
 
     setsDependenceOfPrice();
-    window.util.setAttrFromFields(window.map.adFormFieldsets, 'disabled');
-    window.util.setAttrFromFields(window.map.filterFieldsets, 'disabled');
-    window.util.setAttrFromFields(window.map.filterSelects, 'disabled');
+    window.util.setAttributeFromFields(window.map.adFormFieldsets, 'disabled');
+    window.util.setAttributeFromFields(window.map.filterFieldsets, 'disabled');
+    window.util.setAttributeFromFields(window.map.filterSelects, 'disabled');
     adForm.classList.add('ad-form--disabled');
     window.map.cityView.classList.add('map--faded');
 
-    window.pin.mainPoint.style.left = window.util.MAP_PIN_MAIN_START_COORD_X + 'px';
-    window.pin.mainPoint.style.top = window.util.MAP_PIN_MAIN_START_COORD_Y + 'px';
+    window.pin.mainPoint.style.left = window.util.MAP_PIN_MAIN_START_COORDINATE_X + 'px';
+    window.pin.mainPoint.style.top = window.util.MAP_PIN_MAIN_START_COORDINATE_Y + 'px';
     window.pin.extractAndPasteMainPointCoords(window.pin.mainPoint.style.left, window.pin.mainPoint.style.top, 0, 0);
   };
 

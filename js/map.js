@@ -6,13 +6,13 @@
   var mainPage = document.querySelector('main');
   var map = document.querySelector('.map');
   var adFormFieldsets = window.adForm.querySelectorAll('fieldset');
-  var mapFilters = document.querySelector('.map__filters');
-  var mapFilterFieldsets = mapFilters.querySelectorAll('fieldset');
-  var mapFilterSelects = mapFilters.querySelectorAll('select');
+  var mapFilter = document.querySelector('.map__filters');
+  var mapFilterFieldsets = mapFilter.querySelectorAll('fieldset');
+  var mapFilterSelects = mapFilter.querySelectorAll('select');
   var errorTemplate = document.querySelector('#error').content.querySelector('.error');
-  var mapPins = document.querySelector('.map__pins');
+  var mapPinsBlock = document.querySelector('.map__pins');
   var fragment = document.createDocumentFragment();
-  var housingFilters = mapFilters.querySelectorAll('.map__filter');
+  var housingFilters = mapFilter.querySelectorAll('.map__filter');
   var housingFeatures = document.querySelectorAll('.map__checkbox');
 
   var getFilteredOffers = function () {
@@ -64,7 +64,7 @@
 
   // Управляет отображением на карте активных пинов и соответствующих им карточек объявлений
   var showActivePinsAndCards = function () {
-    var mapPinsArray = mapPins.querySelectorAll('.map__pin:not(.map__pin--main)');
+    var mapPinsArray = mapPinsBlock.querySelectorAll('.map__pin:not(.map__pin--main)');
     var mapCardsArray = map.querySelectorAll('.map__card');
 
     mapPinsArray.forEach(function (item, i) {
@@ -94,7 +94,7 @@
 
   // Управляет предварительным удалением и последующим отображением на странице пинов и карточек
   var clearAndDrawContentHandler = function () {
-    window.util.deleteAllElements(mapPins, '.map__pin:not(.map__pin--main)');
+    window.util.deleteAllElements(mapPinsBlock, '.map__pin:not(.map__pin--main)');
     window.util.deleteAllElements(map, '.map__card');
     window.pin.drawPoints();
     window.drawCards();
@@ -104,14 +104,14 @@
   // Обработчик изменения значений фильтров по типу жилья, количеству комнат, количеству гостей и по стоимости
   housingFilters.forEach(function (filter) {
     filter.addEventListener('change', function () {
-      window.util.debounce(clearAndDrawContentHandler);
+      window.util.deleteDebounce(clearAndDrawContentHandler);
     });
   });
 
   // Обработчик изменения значений фильтров по особенностям (features)
   housingFeatures.forEach(function (feature) {
     feature.addEventListener('change', function () {
-      window.util.debounce(clearAndDrawContentHandler);
+      window.util.deleteDebounce(clearAndDrawContentHandler);
     });
   });
 
@@ -127,9 +127,9 @@
     if (isMapDisabled) {
       map.classList.remove('map--faded');
       window.adForm.classList.remove('ad-form--disabled');
-      window.util.removeAttrFromFields(adFormFieldsets, 'disabled');
-      window.util.removeAttrFromFields(mapFilterFieldsets, 'disabled');
-      window.util.removeAttrFromFields(mapFilterSelects, 'disabled');
+      window.util.removeAttributeFromFields(adFormFieldsets, 'disabled');
+      window.util.removeAttributeFromFields(mapFilterFieldsets, 'disabled');
+      window.util.removeAttributeFromFields(mapFilterSelects, 'disabled');
       window.createSendRequest(function (data) {
         offers = data;
         window.pin.drawPoints();
@@ -144,8 +144,8 @@
     getFilteredOffers: getFilteredOffers,
     fragment: fragment,
     cityView: map,
-    pins: mapPins,
-    filters: mapFilters,
+    pinsBlock: mapPinsBlock,
+    filter: mapFilter,
     adFormFieldsets: adFormFieldsets,
     filterFieldsets: mapFilterFieldsets,
     filterSelects: mapFilterSelects,

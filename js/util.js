@@ -7,8 +7,8 @@
   var POST_URL = 'https://js.dump.academy/keksobooking';
   var COORDINATE_Y_MIN = 130;
   var COORDINATE_Y_MAX = 630;
-  var MAP_PIN_MAIN_START_COORD_X = 570;
-  var MAP_PIN_MAIN_START_COORD_Y = 375;
+  var MAP_PIN_MAIN_START_COORDINATE_X = 570;
+  var MAP_PIN_MAIN_START_COORDINATE_Y = 375;
   var HOUSING_SETTING = {
     'palace': {
       min: 10000,
@@ -28,7 +28,8 @@
     }
   };
 
-  var debounce = function (cb) {
+
+  var deleteDebounce = function (cb) {
     var DEBOUNCE_INTERVAL = 500;
     var lastTimeout = null;
     if (lastTimeout) {
@@ -37,25 +38,18 @@
     lastTimeout = window.setTimeout(cb, DEBOUNCE_INTERVAL);
   };
 
-  var mapWidth = document.querySelector('.map').offsetWidth;
-
   // Удаляет атрибут у нескольких элементов одного типа
-  var removeAttrFromFields = function (arrayName, attributeName) {
+  var removeAttributeFromFields = function (arrayName, attributeName) {
     for (var i = 0; i < arrayName.length; i++) {
       arrayName[i].removeAttribute(attributeName);
     }
   };
 
   // Добавляет атрибут нескольким элементам одного типа
-  var setAttrFromFields = function (arrayName, attributeName) {
+  var setAttributeFromFields = function (arrayName, attributeName) {
     for (var i = 0; i < arrayName.length; i++) {
       arrayName[i].setAttribute(attributeName, true);
     }
-  };
-
-  // Функция-рандомизатор чисел и значений
-  var getRandom = function (min, max) {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
   };
 
   // Функция, выводящая числа от 0 до max в порядке возрастания
@@ -128,18 +122,16 @@
     PIN_WIDTH: PIN_WIDTH,
     COORDINATE_Y_MIN: COORDINATE_Y_MIN,
     COORDINATE_Y_MAX: COORDINATE_Y_MAX,
-    MAP_PIN_MAIN_START_COORD_X: MAP_PIN_MAIN_START_COORD_X,
-    MAP_PIN_MAIN_START_COORD_Y: MAP_PIN_MAIN_START_COORD_Y,
-    debounce: debounce,
-    mapWidth: mapWidth,
+    MAP_PIN_MAIN_START_COORDINATE_X: MAP_PIN_MAIN_START_COORDINATE_X,
+    MAP_PIN_MAIN_START_COORDINATE_Y: MAP_PIN_MAIN_START_COORDINATE_Y,
+    deleteDebounce: deleteDebounce,
     pastePopup: pastePopup,
     isNotEmpty: isNotEmpty,
-    getRandom: getRandom,
     getEndingWord: getEndingWord,
     insertTextContent: insertTextContent,
     getGrowingNumber: getGrowingNumber,
-    removeAttrFromFields: removeAttrFromFields,
-    setAttrFromFields: setAttrFromFields,
+    removeAttributeFromFields: removeAttributeFromFields,
+    setAttributeFromFields: setAttributeFromFields,
     setDependentValue: setDependentValue,
     deleteAllElements: deleteAllElements
   };
