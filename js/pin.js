@@ -4,7 +4,7 @@
   var mapPinMain = document.querySelector('.map__pin--main');
   var mapPinMainWidth = mapPinMain.offsetWidth;
   var mapPinMainHeight = mapPinMain.offsetHeight;
-  var addressInput = window.form.adForm.querySelector('#address');
+  var addressInput = window.adForm.querySelector('#address');
   var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
 
   var Coordinate = function (x, y) {
@@ -48,8 +48,8 @@
         return finishCoord;
       };
 
-      mapPinMain.style.top = giveFinishCoord(finishCoordY, window.mapSettings.COORDINATE_Y_MIN, window.mapSettings.COORDINATE_Y_MAX) + 'px';
-      mapPinMain.style.left = giveFinishCoord(finishCoordX, 0, window.mapSettings.mapWidth - mapPinMainWidth) + 'px';
+      mapPinMain.style.top = giveFinishCoord(finishCoordY, window.util.COORDINATE_Y_MIN, window.util.COORDINATE_Y_MAX) + 'px';
+      mapPinMain.style.left = giveFinishCoord(finishCoordX, 0, window.util.mapWidth - mapPinMainWidth) + 'px';
     };
 
     var onMouseMove = function (moveEvt) {
@@ -93,14 +93,12 @@
         window.map.fragment.appendChild(createMapPin(offer));
       }
     });
-    window.map.mapPins.appendChild(window.map.fragment);
+    window.map.pins.appendChild(window.map.fragment);
   };
 
   window.pin = {
-    drawPins: drawPins,
-    mapPinMain: mapPinMain,
-    mapPinMainWidth: mapPinMainWidth,
-    mapPinMainHeight: mapPinMainHeight,
-    extractAndPasteMainPinCoords: extractAndPasteMainPinCoords
+    drawPoints: drawPins,
+    mainPoint: mapPinMain,
+    extractAndPasteMainPointCoords: extractAndPasteMainPinCoords
   };
 })();

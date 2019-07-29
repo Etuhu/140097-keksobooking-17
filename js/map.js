@@ -5,7 +5,7 @@
   var offers = [];
   var mainPage = document.querySelector('main');
   var map = document.querySelector('.map');
-  var adFormFieldsets = window.form.adForm.querySelectorAll('fieldset');
+  var adFormFieldsets = window.adForm.querySelectorAll('fieldset');
   var mapFilters = document.querySelector('.map__filters');
   var mapFilterFieldsets = mapFilters.querySelectorAll('fieldset');
   var mapFilterSelects = mapFilters.querySelectorAll('select');
@@ -96,7 +96,7 @@
   var clearAndDrawContentHandler = function () {
     window.util.deleteAllElements(mapPins, '.map__pin:not(.map__pin--main)');
     window.util.deleteAllElements(map, '.map__card');
-    window.pin.drawPins();
+    window.pin.drawPoints();
     window.drawCards();
     showActivePinsAndCards();
   };
@@ -104,14 +104,14 @@
   // Обработчик изменения значений фильтров по типу жилья, количеству комнат, количеству гостей и по стоимости
   housingFilters.forEach(function (filter) {
     filter.addEventListener('change', function () {
-      clearAndDrawContentHandler();
+      window.util.debounce(clearAndDrawContentHandler);
     });
   });
 
   // Обработчик изменения значений фильтров по особенностям (features)
   housingFeatures.forEach(function (feature) {
     feature.addEventListener('change', function () {
-      clearAndDrawContentHandler();
+      window.util.debounce(clearAndDrawContentHandler);
     });
   });
 
@@ -126,13 +126,13 @@
     var isMapDisabled = map.classList.contains('map--faded');
     if (isMapDisabled) {
       map.classList.remove('map--faded');
-      window.form.adForm.classList.remove('ad-form--disabled');
+      window.adForm.classList.remove('ad-form--disabled');
       window.util.removeAttrFromFields(adFormFieldsets, 'disabled');
       window.util.removeAttrFromFields(mapFilterFieldsets, 'disabled');
       window.util.removeAttrFromFields(mapFilterSelects, 'disabled');
-      window.backend.createSendRequest(function (data) {
+      window.createSendRequest(function (data) {
         offers = data;
-        window.pin.drawPins();
+        window.pin.drawPoints();
         window.drawCards();
         showActivePinsAndCards();
       }, drawingErrorMessage, window.util.GET_URL, 'GET');
@@ -143,12 +143,12 @@
     activateMainPage: activateMainPage,
     getFilteredOffers: getFilteredOffers,
     fragment: fragment,
-    map: map,
-    mapPins: mapPins,
-    mapFilters: mapFilters,
+    cityView: map,
+    pins: mapPins,
+    filters: mapFilters,
     adFormFieldsets: adFormFieldsets,
-    mapFilterFieldsets: mapFilterFieldsets,
-    mapFilterSelects: mapFilterSelects,
+    filterFieldsets: mapFilterFieldsets,
+    filterSelects: mapFilterSelects,
     mainPage: mainPage,
     drawingErrorMessage: drawingErrorMessage
   };

@@ -28,6 +28,15 @@
     }
   };
 
+  var debounce = function (cb) {
+    var DEBOUNCE_INTERVAL = 500;
+    var lastTimeout = null;
+    if (lastTimeout) {
+      window.clearTimeout(lastTimeout);
+    }
+    lastTimeout = window.setTimeout(cb, DEBOUNCE_INTERVAL);
+  };
+
   var mapWidth = document.querySelector('.map').offsetWidth;
 
   // Удаляет атрибут у нескольких элементов одного типа
@@ -111,20 +120,18 @@
     });
   };
 
-  window.mapSettings = {
-    PIN_WIDTH: PIN_WIDTH,
-    COORDINATE_Y_MIN: COORDINATE_Y_MIN,
-    COORDINATE_Y_MAX: COORDINATE_Y_MAX,
-    MAP_PIN_MAIN_START_COORD_X: MAP_PIN_MAIN_START_COORD_X,
-    MAP_PIN_MAIN_START_COORD_Y: MAP_PIN_MAIN_START_COORD_Y,
-    mapWidth: mapWidth
-  };
-
   window.util = {
     ESC_KEYCODE: ESC_KEYCODE,
     GET_URL: GET_URL,
     POST_URL: POST_URL,
     HOUSING_SETTING: HOUSING_SETTING,
+    PIN_WIDTH: PIN_WIDTH,
+    COORDINATE_Y_MIN: COORDINATE_Y_MIN,
+    COORDINATE_Y_MAX: COORDINATE_Y_MAX,
+    MAP_PIN_MAIN_START_COORD_X: MAP_PIN_MAIN_START_COORD_X,
+    MAP_PIN_MAIN_START_COORD_Y: MAP_PIN_MAIN_START_COORD_Y,
+    debounce: debounce,
+    mapWidth: mapWidth,
     pastePopup: pastePopup,
     isNotEmpty: isNotEmpty,
     getRandom: getRandom,

@@ -76,7 +76,5 @@
     xhr.send(data);
   };
 
-  window.backend = {
-    createSendRequest: createSendRequest
-  };
+  window.createSendRequest = createSendRequest;
 })();
