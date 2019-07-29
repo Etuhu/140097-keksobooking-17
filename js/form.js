@@ -75,7 +75,7 @@
 
   // Осуществляет сброс полей формы и возврат страницы к неактивному состоянию
   var resetFormAndDeactivatePage = function () {
-    window.map.mapFilter.reset();
+    window.map.mapFilters.reset();
     adForm.reset();
 
     window.util.deleteAllElements(window.map.mapPins, '.map__pin:not(.map__pin--main)');
