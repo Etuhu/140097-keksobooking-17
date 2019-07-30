@@ -2,6 +2,8 @@
 
 (function () {
   var MAX_PIN_COUNT = 5;
+  var LOW_PRICE = 10000;
+  var HIGH_PRICE = 50000;
   var offers = [];
   var mainPage = document.querySelector('main');
   var map = document.querySelector('.map');
@@ -46,11 +48,11 @@
           var filterValue = filterObject[filterName];
           var currentValue = offerInfo[filterName];
           if (filterName === 'price') {
-            if (parseInt(offerInfo[filterName], 10) < parseInt('10000', 10)) {
+            if (parseInt(offerInfo[filterName], 10) < LOW_PRICE) {
               currentValue = 'low';
-            } else if (parseInt(offerInfo[filterName], 10) >= parseInt('10000', 10) && parseInt(offerInfo[filterName], 10) < parseInt('50000', 10)) {
+            } else if (parseInt(offerInfo[filterName], 10) >= LOW_PRICE && parseInt(offerInfo[filterName], 10) < HIGH_PRICE) {
               currentValue = 'middle';
-            } else if (parseInt(offerInfo[filterName], 10) >= parseInt('50000', 10)) {
+            } else if (parseInt(offerInfo[filterName], 10) >= HIGH_PRICE) {
               currentValue = 'high';
             }
           }
@@ -96,7 +98,7 @@
   var clearAndDrawContentHandler = function () {
     window.util.deleteAllElements(mapPinsBlock, '.map__pin:not(.map__pin--main)');
     window.util.deleteAllElements(map, '.map__card');
-    window.pin.drawPoints();
+    window.pin.draw();
     window.drawCards();
     showActivePinsAndCards();
   };
@@ -104,14 +106,14 @@
   // Обработчик изменения значений фильтров по типу жилья, количеству комнат, количеству гостей и по стоимости
   housingFilters.forEach(function (filter) {
     filter.addEventListener('change', function () {
-      window.util.deleteDebounce(clearAndDrawContentHandler);
+      window.util.debounce(clearAndDrawContentHandler);
     });
   });
 
   // Обработчик изменения значений фильтров по особенностям (features)
   housingFeatures.forEach(function (feature) {
     feature.addEventListener('change', function () {
-      window.util.deleteDebounce(clearAndDrawContentHandler);
+      window.util.debounce(clearAndDrawContentHandler);
     });
   });
 
@@ -127,12 +129,12 @@
     if (isMapDisabled) {
       map.classList.remove('map--faded');
       window.adForm.classList.remove('ad-form--disabled');
-      window.util.removeAttributeFromFields(adFormFieldsets, 'disabled');
-      window.util.removeAttributeFromFields(mapFilterFieldsets, 'disabled');
-      window.util.removeAttributeFromFields(mapFilterSelects, 'disabled');
-      window.createSendRequest(function (data) {
+      window.util.removeAttributeFromElements(adFormFieldsets, 'disabled');
+      window.util.removeAttributeFromElements(mapFilterFieldsets, 'disabled');
+      window.util.removeAttributeFromElements(mapFilterSelects, 'disabled');
+      window.createRequest(function (data) {
         offers = data;
-        window.pin.drawPoints();
+        window.pin.draw();
         window.drawCards();
         showActivePinsAndCards();
       }, drawErrorMessage, window.util.GET_URL, 'GET');
@@ -143,7 +145,7 @@
     activateMainPage: activateMainPage,
     getFilteredOffers: getFilteredOffers,
     fragment: fragment,
-    cityView: map,
+    city: map,
     pinsBlock: mapPinsBlock,
     filter: mapFilter,
     adFormFieldsets: adFormFieldsets,

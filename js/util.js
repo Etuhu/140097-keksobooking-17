@@ -27,10 +27,10 @@
       placeholder: 0
     }
   };
+  var DEBOUNCE_INTERVAL = 500;
+  var lastTimeout = null;
 
-  var deleteDebounce = function (cb) {
-    var DEBOUNCE_INTERVAL = 500;
-    var lastTimeout = null;
+  var debounce = function (cb) {
     if (lastTimeout) {
       window.clearTimeout(lastTimeout);
     }
@@ -38,14 +38,14 @@
   };
 
   // Удаляет атрибут у нескольких элементов одного типа
-  var removeAttributeFromFields = function (arrayName, attributeName) {
+  var removeAttributeFromElements = function (arrayName, attributeName) {
     for (var i = 0; i < arrayName.length; i++) {
       arrayName[i].removeAttribute(attributeName);
     }
   };
 
   // Добавляет атрибут нескольким элементам одного типа
-  var setAttributeFromFields = function (arrayName, attributeName) {
+  var setAttributeFromElements = function (arrayName, attributeName) {
     for (var i = 0; i < arrayName.length; i++) {
       arrayName[i].setAttribute(attributeName, true);
     }
@@ -97,7 +97,7 @@
     parent.appendChild(fragment);
   };
 
-  // Удаляет из разметки и со страницы все найденные дочерние элементы определенного блока
+  // Удаляет из разметки и со страницы все найденные дочерние элементы определенного родителя
   var deleteAllElements = function (parent, itemsToDelete) {
     parent.querySelectorAll(itemsToDelete).forEach(function (item) {
       parent.removeChild(item);
@@ -114,13 +114,13 @@
     COORDINATE_Y_MAX: COORDINATE_Y_MAX,
     MAP_PIN_MAIN_START_COORDINATE_X: MAP_PIN_MAIN_START_COORDINATE_X,
     MAP_PIN_MAIN_START_COORDINATE_Y: MAP_PIN_MAIN_START_COORDINATE_Y,
-    deleteDebounce: deleteDebounce,
+    debounce: debounce,
     pastePopup: pastePopup,
     isNotEmpty: isNotEmpty,
     getEndingWord: getEndingWord,
     insertTextContent: insertTextContent,
-    removeAttributeFromFields: removeAttributeFromFields,
-    setAttributeFromFields: setAttributeFromFields,
+    removeAttributeFromElements: removeAttributeFromElements,
+    setAttributeFromElements: setAttributeFromElements,
     setDependentValue: setDependentValue,
     deleteAllElements: deleteAllElements
   };

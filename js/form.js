@@ -4,6 +4,7 @@
   var MIN_CAPACITY = 0;
   var MAX_ROOM_NUMBER = 100;
   var adForm = document.querySelector('.ad-form');
+  var resetButton = adForm.querySelector('.ad-form__reset');
   var housingTypeSelect = adForm.querySelector('#type');
   var timeInSelect = adForm.querySelector('#timein');
   var timeOutSelect = adForm.querySelector('#timeout');
@@ -75,18 +76,18 @@
     adForm.reset();
 
     window.util.deleteAllElements(window.map.pinsBlock, '.map__pin:not(.map__pin--main)');
-    window.util.deleteAllElements(window.map.cityView, '.map__card');
+    window.util.deleteAllElements(window.map.city, '.map__card');
 
     setsDependenceOfPrice();
-    window.util.setAttributeFromFields(window.map.adFormFieldsets, 'disabled');
-    window.util.setAttributeFromFields(window.map.filterFieldsets, 'disabled');
-    window.util.setAttributeFromFields(window.map.filterSelects, 'disabled');
+    window.util.setAttributeFromElements(window.map.adFormFieldsets, 'disabled');
+    window.util.setAttributeFromElements(window.map.filterFieldsets, 'disabled');
+    window.util.setAttributeFromElements(window.map.filterSelects, 'disabled');
     adForm.classList.add('ad-form--disabled');
-    window.map.cityView.classList.add('map--faded');
+    window.map.city.classList.add('map--faded');
 
-    window.pin.mainPoint.style.left = window.util.MAP_PIN_MAIN_START_COORDINATE_X + 'px';
-    window.pin.mainPoint.style.top = window.util.MAP_PIN_MAIN_START_COORDINATE_Y + 'px';
-    window.pin.extractAndPasteMainPointCoords(window.pin.mainPoint.style.left, window.pin.mainPoint.style.top, 0, 0);
+    window.pin.main.style.left = window.util.MAP_PIN_MAIN_START_COORDINATE_X + 'px';
+    window.pin.main.style.top = window.util.MAP_PIN_MAIN_START_COORDINATE_Y + 'px';
+    window.pin.updateCoordinatesField(window.pin.main.style.left, window.pin.main.style.top, 0, 0);
   };
 
   // Отрисовывает сообщение об успешной отправке данных формы
@@ -97,12 +98,13 @@
   // Осуществляет отправку данных формы и сброс полей формы с возвратом страницы к неактивному состоянию
   adForm.addEventListener('submit', function (evt) {
     evt.preventDefault();
-    window.createSendRequest(drawSuccessMessage, window.map.drawErrorMessage, window.util.POST_URL, 'POST', new FormData(adForm));
+    window.createRequest(drawSuccessMessage, window.map.drawErrorMessage, window.util.POST_URL, 'POST', new FormData(adForm));
     resetFormAndDeactivatePage();
   });
 
   // Осуществляет сброс полей формы с возвратом страницы к неактивному состоянию при нажатии кнопки очистки формы
-  adForm.addEventListener('reset', function () {
+  resetButton.addEventListener('click', function (evt) {
+    evt.preventDefault();
     resetFormAndDeactivatePage();
   });
 
