@@ -1,10 +1,11 @@
 'use strict';
 
 (function () {
+  var mapWidth = document.querySelector('.map').offsetWidth;
   var mapPinMain = document.querySelector('.map__pin--main');
   var mapPinMainWidth = mapPinMain.offsetWidth;
   var mapPinMainHeight = mapPinMain.offsetHeight;
-  var addressInput = window.form.adForm.querySelector('#address');
+  var addressInput = window.adForm.querySelector('#address');
   var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
 
   var Coordinate = function (x, y) {
@@ -14,56 +15,56 @@
 
   // Извлекает числовое значение из строчного элемента и записывает его в поле ввода адреса
   // (с поправкой на то, что в адрес записываются координаты острого конца)
-  var extractAndPasteMainPinCoords = function (left, top, widthCorrect, heightCorrect) {
-    addressInput.value = (parseInt(left, 10) + widthCorrect) + ', ' + (parseInt(top, 10) + heightCorrect);
-    var extractAndPasteMainPinCoordsValue = Math.round(addressInput.value);
-    return extractAndPasteMainPinCoordsValue;
+  var extractAndPasteMainPinCoordinates = function (left, top, widthCorrector, heightCorrector) {
+    addressInput.value = (parseInt(left, 10) + widthCorrector) + ', ' + (parseInt(top, 10) + heightCorrector);
+    var extractAndPasteMainPinCoordinatesValue = Math.round(addressInput.value);
+    return extractAndPasteMainPinCoordinatesValue;
   };
 
   // Записывает в поле ввода координаты главной метки до момента активации (красный круг)
-  extractAndPasteMainPinCoords(mapPinMain.style.left, mapPinMain.style.top, 0, 0);
+  extractAndPasteMainPinCoordinates(mapPinMain.style.left, mapPinMain.style.top, 0, 0);
 
   // Добавляет возможность перемещения метки по карте
   mapPinMain.addEventListener('mousedown', function (evt) {
     evt.preventDefault();
 
-    var startCoords = new Coordinate(evt.clientX, evt.clientY);
+    var startCoordinates = new Coordinate(evt.clientX, evt.clientY);
 
     // Задает расчёт координат маркера и их запись в поле адреса
-    var calculateCoordMainPin = function (evtName) {
-      var shift = new Coordinate(startCoords.x - evtName.clientX, startCoords.y - evtName.clientY);
+    var calculateCoordinatesMainPin = function (evtName) {
+      var shift = new Coordinate(startCoordinates.x - evtName.clientX, startCoordinates.y - evtName.clientY);
 
-      startCoords = new Coordinate(evtName.clientX, evtName.clientY);
+      startCoordinates = new Coordinate(evtName.clientX, evtName.clientY);
 
-      var finishCoordX = mapPinMain.offsetLeft - shift.x;
-      var finishCoordY = mapPinMain.offsetTop - shift.y;
+      var finishCoordinateX = mapPinMain.offsetLeft - shift.x;
+      var finishCoordinateY = mapPinMain.offsetTop - shift.y;
 
       // Устанавливает предельные границы размещения маркера
-      var giveFinishCoord = function (finishCoord, minLimit, maxLimit) {
-        if (finishCoord <= minLimit) {
-          finishCoord = minLimit;
-        } else if (finishCoord >= maxLimit) {
-          finishCoord = maxLimit;
+      var givefinishCoordinates = function (finishCoordinate, minLimit, maxLimit) {
+        if (finishCoordinate <= minLimit) {
+          finishCoordinate = minLimit;
+        } else if (finishCoordinate >= maxLimit) {
+          finishCoordinate = maxLimit;
         }
-        return finishCoord;
+        return finishCoordinate;
       };
 
-      mapPinMain.style.top = giveFinishCoord(finishCoordY, window.mapSettings.COORDINATE_Y_MIN, window.mapSettings.COORDINATE_Y_MAX) + 'px';
-      mapPinMain.style.left = giveFinishCoord(finishCoordX, 0, window.mapSettings.mapWidth - mapPinMainWidth) + 'px';
+      mapPinMain.style.top = givefinishCoordinates(finishCoordinateY, window.util.COORDINATE_Y_MIN, window.util.COORDINATE_Y_MAX) + 'px';
+      mapPinMain.style.left = givefinishCoordinates(finishCoordinateX, 0, mapWidth - mapPinMainWidth) + 'px';
     };
 
     var onMouseMove = function (moveEvt) {
       moveEvt.preventDefault();
       window.map.activateMainPage();
-      calculateCoordMainPin(moveEvt);
+      calculateCoordinatesMainPin(moveEvt);
     };
 
     var onMouseUp = function (upEvt) {
       upEvt.preventDefault();
-      calculateCoordMainPin(upEvt);
+      calculateCoordinatesMainPin(upEvt);
 
       // Заполняет поле адреса в соответствии с положением метки на карте
-      extractAndPasteMainPinCoords(mapPinMain.style.left, mapPinMain.style.top, mapPinMainWidth / 2, mapPinMainHeight);
+      extractAndPasteMainPinCoordinates(mapPinMain.style.left, mapPinMain.style.top, mapPinMainWidth / 2, mapPinMainHeight);
 
       document.removeEventListener('mousemove', onMouseMove);
       document.removeEventListener('mouseup', onMouseUp);
@@ -93,14 +94,12 @@
         window.map.fragment.appendChild(createMapPin(offer));
       }
     });
-    window.map.mapPins.appendChild(window.map.fragment);
+    window.map.pinsBlock.appendChild(window.map.fragment);
   };
 
   window.pin = {
-    drawPins: drawPins,
-    mapPinMain: mapPinMain,
-    mapPinMainWidth: mapPinMainWidth,
-    mapPinMainHeight: mapPinMainHeight,
-    extractAndPasteMainPinCoords: extractAndPasteMainPinCoords
+    drawPoints: drawPins,
+    mainPoint: mapPinMain,
+    extractAndPasteMainPointCoords: extractAndPasteMainPinCoordinates
   };
 })();
