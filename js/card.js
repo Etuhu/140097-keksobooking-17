@@ -95,7 +95,7 @@
     filteredOffers.map(function (offer) {
       window.map.fragment.appendChild(createCard(offer));
     });
-    window.map.cityView.insertBefore(window.map.fragment, mapFiltersContainer);
+    window.map.city.insertBefore(window.map.fragment, mapFiltersContainer);
   };
 
   window.drawCards = drawCards;
