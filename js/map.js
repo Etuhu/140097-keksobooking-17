@@ -66,29 +66,29 @@
 
   // Управляет отображением на карте активных пинов и соответствующих им карточек объявлений
   var showActivePinsAndCards = function () {
-    var mapPinsArray = mapPinsBlock.querySelectorAll('.map__pin:not(.map__pin--main)');
-    var mapCardsArray = map.querySelectorAll('.map__card');
+    var mapPins = mapPinsBlock.querySelectorAll('.map__pin:not(.map__pin--main)');
+    var mapCards = map.querySelectorAll('.map__card');
 
-    mapPinsArray.forEach(function (item, i) {
+    mapPins.forEach(function (item, i) {
       item.addEventListener('click', function () {
-        mapPinsArray.forEach(function (itm) {
+        mapPins.forEach(function (itm) {
           itm.classList.remove('map__pin--active');
         });
-        mapCardsArray.forEach(function (it) {
+        mapCards.forEach(function (it) {
           it.hidden = true;
         });
         item.classList.add('map__pin--active');
-        mapCardsArray[i].hidden = false;
+        mapCards[i].hidden = false;
       });
 
-      mapCardsArray[i].querySelector('.popup__close').addEventListener('click', function () {
-        mapCardsArray[i].hidden = true;
-        mapPinsArray[i].classList.remove('map__pin--active');
+      mapCards[i].querySelector('.popup__close').addEventListener('click', function () {
+        mapCards[i].hidden = true;
+        mapPins[i].classList.remove('map__pin--active');
       });
       document.addEventListener('keydown', function (evt) {
         if (evt.keyCode === window.util.ESC_KEYCODE) {
-          mapCardsArray[i].hidden = true;
-          mapPinsArray[i].classList.remove('map__pin--active');
+          mapCards[i].hidden = true;
+          mapPins[i].classList.remove('map__pin--active');
         }
       });
     });
