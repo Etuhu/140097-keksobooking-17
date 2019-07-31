@@ -3,6 +3,7 @@
 (function () {
   var SUCCESS_LOAD_STATUS = 200;
   var LOAD_TIMEOUT = 10000;
+
   // Удаляет сообщение об ошибке из разметки по клику на элемент-кнопку, клику на произвольную область и нажатию клавиши Esc
   var addDeleteErrorModalListeners = function () {
     var errorModal = document.querySelector('.error');
@@ -11,10 +12,12 @@
     if (errorModal) {
       errorButton.addEventListener('click', function () {
         errorModal.remove();
+        document.removeEventListener('keydown', onPopupEscPress);
       });
 
       errorModal.addEventListener('click', function () {
         errorModal.remove();
+        document.removeEventListener('keydown', onPopupEscPress);
       });
 
       var onPopupEscPress = function (evt) {
@@ -34,6 +37,7 @@
     if (successModal) {
       successModal.addEventListener('click', function () {
         successModal.remove();
+        document.removeEventListener('keydown', onPopupEscPress);
       });
 
       var onPopupEscPress = function (evt) {
