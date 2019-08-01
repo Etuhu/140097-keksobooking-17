@@ -67,28 +67,33 @@
   // Управляет отображением на карте активных пинов и соответствующих им карточек объявлений
   var showActivePinsAndCards = function () {
     var mapPins = mapPinsBlock.querySelectorAll('.map__pin:not(.map__pin--main)');
-    var mapCard = map.querySelector('.map__card');
+    var mapCard = document.querySelector('.map__card');
+    var activePin = document.querySelector('.map__pin--active');
 
     mapPins.forEach(function (item, i) {
+      var onMapEscPress = function (evt) {
+        if (evt.keyCode === window.util.ESC_KEYCODE && item.classList.contains('map__pin--active')) {
+          window.util.deleteAllElements(map, '.map__card');
+          item.classList.remove('map__pin--active');
+          document.removeEventListener('keydown', onMapEscPress);
+        }
+      };
+
       item.addEventListener('click', function () {
+        document.addEventListener('keydown', onMapEscPress);
+
+        window.util.deleteAllElements(map, '.map__card');
         mapPins.forEach(function (itm) {
           itm.classList.remove('map__pin--active');
         });
-        // mapCard.hidden = true;
         item.classList.add('map__pin--active');
         window.drawCards(i);
-        // mapCard.hidden = false;
-      });
 
-      // mapCard.querySelector('.popup__close').addEventListener('click', function () {
-      //   mapCard.hidden = true;
-      //   mapPins[i].classList.remove('map__pin--active');
-      // });
-      document.addEventListener('keydown', function (evt) {
-        if (evt.keyCode === window.util.ESC_KEYCODE) {
-          // mapCard.hidden = true;
+        document.querySelector('.popup__close').addEventListener('click', function () {
+          window.util.deleteAllElements(map, '.map__card');
           mapPins[i].classList.remove('map__pin--active');
-        }
+          document.removeEventListener('keydown', onMapEscPress);
+        });
       });
     });
   };
