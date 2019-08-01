@@ -4,7 +4,7 @@
   var ESC_KEYCODE = 27;
   var PIN_WIDTH = 50;
   var GET_URL = 'https://js.dump.academy/keksobooking/data';
-  var POST_URL = 'https://js.dump.academy/keksobookin';
+  var POST_URL = 'https://js.dump.academy/keksobooking';
   var COORDINATE_Y_MIN = 130;
   var COORDINATE_Y_MAX = 630;
   var MAP_PIN_MAIN_START_COORDINATE_X = 570;

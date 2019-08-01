@@ -89,42 +89,9 @@
     return cardElement;
   };
 
-  // var activePin = document.querySelector('.map__pin--active');
-  //
-  // var getActivePinIndex = function () {
-  //   pins.indexOf(activePin);
-  //   console.log(getActivePinIndex);
-  // }
-  //
-  // activePin.addEventListener('click', function () {
-  //   getActivePinIndex();
-  // });
-  //
-  // var getActivePinIndex = function () {
-  //   pins.forEach(function (item, index) {
-  //     if (item.classList.contains('map__pin--active')) {
-  //       return index;
-  //     }
-  //     return index;
-  //
-  //     console.log(index);
-  //   });
-  // };
-  //
-  // var activePin = document.querySelector('.map__pin--active');
-  // activePin.addEventListener('click', function () {
-  //   getActivePinIndex();
-  // });
-
-
-
   // Отрисовывает карточки на странице
   var drawCards = function (cardNumber) {
     var filteredOffers = window.map.getFilteredOffers();
-    // filteredOffers.map(function (offer) {
-    //   window.map.fragment.appendChild(createCard(offer));
-    // });
-
     window.map.fragment.appendChild(createCard(filteredOffers[cardNumber]));
     window.map.city.insertBefore(window.map.fragment, mapFiltersContainer);
   };

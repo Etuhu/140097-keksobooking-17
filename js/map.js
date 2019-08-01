@@ -67,8 +67,6 @@
   // Управляет отображением на карте активных пинов и соответствующих им карточек объявлений
   var showActivePinsAndCards = function () {
     var mapPins = mapPinsBlock.querySelectorAll('.map__pin:not(.map__pin--main)');
-    var mapCard = document.querySelector('.map__card');
-    var activePin = document.querySelector('.map__pin--active');
 
     mapPins.forEach(function (item, i) {
       var onMapEscPress = function (evt) {
@@ -79,21 +77,23 @@
         }
       };
 
-      item.addEventListener('click', function () {
-        document.addEventListener('keydown', onMapEscPress);
+      document.removeEventListener('keydown', onMapEscPress);
 
+      item.addEventListener('click', function () {
         window.util.deleteAllElements(map, '.map__card');
         mapPins.forEach(function (itm) {
           itm.classList.remove('map__pin--active');
         });
         item.classList.add('map__pin--active');
         window.drawCards(i);
-
         document.querySelector('.popup__close').addEventListener('click', function () {
           window.util.deleteAllElements(map, '.map__card');
           mapPins[i].classList.remove('map__pin--active');
           document.removeEventListener('keydown', onMapEscPress);
         });
+
+        document.addEventListener('keydown', onMapEscPress);
+
       });
     });
   };
@@ -103,7 +103,6 @@
     window.util.deleteAllElements(mapPinsBlock, '.map__pin:not(.map__pin--main)');
     window.util.deleteAllElements(map, '.map__card');
     window.pin.draw();
-    // window.drawCards();
     showActivePinsAndCards();
   };
 
@@ -139,7 +138,6 @@
       window.createRequest(function (data) {
         offers = data;
         window.pin.draw();
-        // window.drawCards();
         showActivePinsAndCards();
       }, drawErrorMessage, window.util.GET_URL, 'GET');
     }
