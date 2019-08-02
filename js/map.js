@@ -66,7 +66,7 @@
               currentValue = 'high';
             }
           }
-          return String(currentValue) === String(filterValue);
+          return currentValue === filterValue;
         });
         return isFeatureMatch && isFilterMatch;
       });
