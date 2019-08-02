@@ -64,36 +64,46 @@
     return filteredOffers.slice(0, MAX_PIN_COUNT);
   };
 
+  //////////////////
+
+  var onMapEscPress = function (evt) {
+    if (evt.keyCode === window.util.ESC_KEYCODE) {
+      window.util.deleteAllElements(map, '.map__card');
+      if (document.querySelector('.map__pin--active')) {
+        document.querySelector('.map__pin--active').classList.remove('map__pin--active');
+      }
+      document.removeEventListener('keydown', onMapEscPress);
+    }
+  };
+
+  ////////////////
+
   // Управляет отображением на карте активных пинов и соответствующих им карточек объявлений
   var showActivePinsAndCards = function () {
     var mapPins = mapPinsBlock.querySelectorAll('.map__pin:not(.map__pin--main)');
+    document.removeEventListener('keydown', onMapEscPress);
 
     mapPins.forEach(function (item, i) {
-      var onMapEscPress = function (evt) {
-        if (evt.keyCode === window.util.ESC_KEYCODE && item.classList.contains('map__pin--active')) {
-          window.util.deleteAllElements(map, '.map__card');
-          item.classList.remove('map__pin--active');
-          document.removeEventListener('keydown', onMapEscPress);
-        }
-      };
 
-      document.removeEventListener('keydown', onMapEscPress);
+      // document.removeEventListener('keydown', onMapEscPress);
 
       item.addEventListener('click', function () {
+        document.removeEventListener('keydown', onMapEscPress);
         window.util.deleteAllElements(map, '.map__card');
         mapPins.forEach(function (itm) {
           itm.classList.remove('map__pin--active');
         });
+
         item.classList.add('map__pin--active');
         window.drawCards(i);
+
         document.querySelector('.popup__close').addEventListener('click', function () {
           window.util.deleteAllElements(map, '.map__card');
-          mapPins[i].classList.remove('map__pin--active');
+          document.querySelector('.map__pin--active').classList.remove('map__pin--active');
           document.removeEventListener('keydown', onMapEscPress);
         });
 
         document.addEventListener('keydown', onMapEscPress);
-
       });
     });
   };
@@ -154,6 +164,7 @@
     filterFieldsets: mapFilterFieldsets,
     filterSelects: mapFilterSelects,
     mainPage: mainPage,
-    drawErrorMessage: drawErrorMessage
+    drawErrorMessage: drawErrorMessage,
+    onMapEscPress: onMapEscPress
   };
 })();

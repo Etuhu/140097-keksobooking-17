@@ -13,17 +13,20 @@
       errorButton.addEventListener('click', function () {
         errorModal.remove();
         document.removeEventListener('keydown', onPopupEscPress);
+        document.removeEventListener('keydown', window.map.onMapEscPress);
       });
 
       errorModal.addEventListener('click', function () {
         errorModal.remove();
         document.removeEventListener('keydown', onPopupEscPress);
+        document.removeEventListener('keydown', window.map.onMapEscPress);
       });
 
       var onPopupEscPress = function (evt) {
         if (evt.keyCode === window.util.ESC_KEYCODE) {
           errorModal.remove();
           document.removeEventListener('keydown', onPopupEscPress);
+          document.removeEventListener('keydown', window.map.onMapEscPress);
         }
       };
 
@@ -38,12 +41,14 @@
       successModal.addEventListener('click', function () {
         successModal.remove();
         document.removeEventListener('keydown', onPopupEscPress);
+        document.removeEventListener('keydown', window.map.onMapEscPress);
       });
 
       var onPopupEscPress = function (evt) {
         if (evt.keyCode === window.util.ESC_KEYCODE) {
           successModal.remove();
           document.removeEventListener('keydown', onPopupEscPress);
+          document.removeEventListener('keydown', window.map.onMapEscPress);
         }
       };
 

@@ -85,7 +85,6 @@
       });
     }
 
-    cardElement.remove();
     return cardElement;
   };
 
