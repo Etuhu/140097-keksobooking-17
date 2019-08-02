@@ -17,6 +17,16 @@
   var housingFilters = mapFilter.querySelectorAll('.map__filter');
   var housingFeatures = document.querySelectorAll('.map__checkbox');
 
+  var onMapEscPress = function (evt) {
+    if (evt.keyCode === window.util.ESC_KEYCODE) {
+      window.util.deleteAllElements(map, '.map__card');
+      if (document.querySelector('.map__pin--active')) {
+        document.querySelector('.map__pin--active').classList.remove('map__pin--active');
+      }
+      document.removeEventListener('keydown', onMapEscPress);
+    }
+  };
+
   var getFilteredOffers = function () {
     var selects = Array.from(mapFilterSelects);
     var activeSelects = selects.filter(function (select) {
@@ -64,29 +74,12 @@
     return filteredOffers.slice(0, MAX_PIN_COUNT);
   };
 
-  //////////////////
-
-  var onMapEscPress = function (evt) {
-    if (evt.keyCode === window.util.ESC_KEYCODE) {
-      window.util.deleteAllElements(map, '.map__card');
-      if (document.querySelector('.map__pin--active')) {
-        document.querySelector('.map__pin--active').classList.remove('map__pin--active');
-      }
-      document.removeEventListener('keydown', onMapEscPress);
-    }
-  };
-
-  ////////////////
-
   // Управляет отображением на карте активных пинов и соответствующих им карточек объявлений
   var showActivePinsAndCards = function () {
     var mapPins = mapPinsBlock.querySelectorAll('.map__pin:not(.map__pin--main)');
     document.removeEventListener('keydown', onMapEscPress);
 
     mapPins.forEach(function (item, i) {
-
-      // document.removeEventListener('keydown', onMapEscPress);
-
       item.addEventListener('click', function () {
         document.removeEventListener('keydown', onMapEscPress);
         window.util.deleteAllElements(map, '.map__card');
