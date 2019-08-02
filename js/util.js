@@ -86,14 +86,14 @@
   };
 
   // Генерирует из шаблона всплывающее сообщение
-  var popupMessageHandler = function (template) {
+  var popupMessageClone = function (template) {
     var popupBlock = template.cloneNode(true);
     return popupBlock;
   };
 
   // Добавляет в разметку отрисованное всплывающее сообщение
   var pastePopup = function (parent, template, fragment) {
-    fragment.appendChild(popupMessageHandler(template));
+    fragment.appendChild(popupMessageClone(template));
     parent.appendChild(fragment);
   };
 

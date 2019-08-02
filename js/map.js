@@ -17,6 +17,16 @@
   var housingFilters = mapFilter.querySelectorAll('.map__filter');
   var housingFeatures = document.querySelectorAll('.map__checkbox');
 
+  var onMapEscPress = function (evt) {
+    if (evt.keyCode === window.util.ESC_KEYCODE) {
+      window.util.deleteAllElements(map, '.map__card');
+      if (document.querySelector('.map__pin--active')) {
+        document.querySelector('.map__pin--active').classList.remove('map__pin--active');
+      }
+      document.removeEventListener('keydown', onMapEscPress);
+    }
+  };
+
   var getFilteredOffers = function () {
     var selects = Array.from(mapFilterSelects);
     var activeSelects = selects.filter(function (select) {
@@ -66,30 +76,27 @@
 
   // Управляет отображением на карте активных пинов и соответствующих им карточек объявлений
   var showActivePinsAndCards = function () {
-    var mapPinsArray = mapPinsBlock.querySelectorAll('.map__pin:not(.map__pin--main)');
-    var mapCardsArray = map.querySelectorAll('.map__card');
+    var mapPins = mapPinsBlock.querySelectorAll('.map__pin:not(.map__pin--main)');
+    document.removeEventListener('keydown', onMapEscPress);
 
-    mapPinsArray.forEach(function (item, i) {
+    mapPins.forEach(function (item, i) {
       item.addEventListener('click', function () {
-        mapPinsArray.forEach(function (itm) {
+        document.removeEventListener('keydown', onMapEscPress);
+        window.util.deleteAllElements(map, '.map__card');
+        mapPins.forEach(function (itm) {
           itm.classList.remove('map__pin--active');
         });
-        mapCardsArray.forEach(function (it) {
-          it.hidden = true;
-        });
-        item.classList.add('map__pin--active');
-        mapCardsArray[i].hidden = false;
-      });
 
-      mapCardsArray[i].querySelector('.popup__close').addEventListener('click', function () {
-        mapCardsArray[i].hidden = true;
-        mapPinsArray[i].classList.remove('map__pin--active');
-      });
-      document.addEventListener('keydown', function (evt) {
-        if (evt.keyCode === window.util.ESC_KEYCODE) {
-          mapCardsArray[i].hidden = true;
-          mapPinsArray[i].classList.remove('map__pin--active');
-        }
+        item.classList.add('map__pin--active');
+        window.drawCards(i);
+
+        document.querySelector('.popup__close').addEventListener('click', function () {
+          window.util.deleteAllElements(map, '.map__card');
+          document.querySelector('.map__pin--active').classList.remove('map__pin--active');
+          document.removeEventListener('keydown', onMapEscPress);
+        });
+
+        document.addEventListener('keydown', onMapEscPress);
       });
     });
   };
@@ -99,7 +106,6 @@
     window.util.deleteAllElements(mapPinsBlock, '.map__pin:not(.map__pin--main)');
     window.util.deleteAllElements(map, '.map__card');
     window.pin.draw();
-    window.drawCards();
     showActivePinsAndCards();
   };
 
@@ -135,7 +141,6 @@
       window.createRequest(function (data) {
         offers = data;
         window.pin.draw();
-        window.drawCards();
         showActivePinsAndCards();
       }, drawErrorMessage, window.util.GET_URL, 'GET');
     }
@@ -152,6 +157,7 @@
     filterFieldsets: mapFilterFieldsets,
     filterSelects: mapFilterSelects,
     mainPage: mainPage,
-    drawErrorMessage: drawErrorMessage
+    drawErrorMessage: drawErrorMessage,
+    onMapEscPress: onMapEscPress
   };
 })();

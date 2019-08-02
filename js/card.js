@@ -85,16 +85,13 @@
       });
     }
 
-    cardElement.hidden = true;
     return cardElement;
   };
 
   // Отрисовывает карточки на странице
-  var drawCards = function () {
+  var drawCards = function (cardNumber) {
     var filteredOffers = window.map.getFilteredOffers();
-    filteredOffers.map(function (offer) {
-      window.map.fragment.appendChild(createCard(offer));
-    });
+    window.map.fragment.appendChild(createCard(filteredOffers[cardNumber]));
     window.map.city.insertBefore(window.map.fragment, mapFiltersContainer);
   };
 

@@ -77,6 +77,7 @@
 
     window.util.deleteAllElements(window.map.pinsBlock, '.map__pin:not(.map__pin--main)');
     window.util.deleteAllElements(window.map.city, '.map__card');
+    document.removeEventListener('keydown', window.map.onMapEscPress);
 
     setsDependenceOfPrice();
     window.util.setAttributeFromElements(window.map.adFormFieldsets, 'disabled');
