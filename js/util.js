@@ -39,16 +39,16 @@
 
   // Удаляет атрибут у нескольких элементов одного типа
   var removeAttributeFromElements = function (arrayName, attributeName) {
-    for (var i = 0; i < arrayName.length; i++) {
+    arrayName.forEach(function (item, i) {
       arrayName[i].removeAttribute(attributeName);
-    }
+    });
   };
 
   // Добавляет атрибут нескольким элементам одного типа
   var setAttributeFromElements = function (arrayName, attributeName) {
-    for (var i = 0; i < arrayName.length; i++) {
+    arrayName.forEach(function (item, i) {
       arrayName[i].setAttribute(attributeName, true);
-    }
+    });
   };
 
   // Устанавливает зависимость между временем заезда и выезда
